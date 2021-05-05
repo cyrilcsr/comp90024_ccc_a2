@@ -1,0 +1,14 @@
+.scenario {
+    height: 100vh;
+    background-color: #282c34;
+    padding-left: 1rem;
+}
+
+.scenario-body {
+    padding: 3rem;
+}
+
+.scenario-title {
+    color: #fff8dc;
+    text-align: center;
+}
