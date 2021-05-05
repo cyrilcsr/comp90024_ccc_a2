@@ -18,7 +18,7 @@ const Map = ({ onClick }) => {
         container: mapContainer.current,
         style: "mapbox://styles/jeansxt/cko9nl9d81nsw17mpgbwn11ph", // stylesheet location
         center: [135.2, -29.6],
-        zoom: 3
+        zoom: 4
       });
 
       map.addControl(new mapboxgl.NavigationControl(), 'top-right');
