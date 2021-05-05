@@ -22,3 +22,48 @@
     font-weight: bold;
 }
 
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+#title {
+  top: 0;
+  left: 20px;
+  height: 40px;
+  margin-top: 20px;
+  width: 300px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+ 
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+#title {
+  top: 0;
+  left: 20px;
+  height: 40px;
+  margin-top: 20px;
+  width: 300px;
+}
+h2 {
+  margin: 10px;
+  font-size: 1.2em;
+  text-align: left;
+}
+
+/* Map */
+.map {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+}

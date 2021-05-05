@@ -6,3 +6,22 @@
     text-align: center;
     min-height: 100vh;
 }
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+#title {
+  top: 0;
+  left: 20px;
+  height: 40px;
+  margin-top: 20px;
+  width: 300px;
+}
+h2 {
+  margin: 10px;
+  font-size: 1.2em;
+  text-align: left;
+}
