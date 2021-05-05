@@ -33,7 +33,7 @@
 ``` JavaScript
 // map
 function(doc){
-    emit(doc.metropolitan, doc.sentiment_score)
+    emit([doc.metropolitan, doc.city], doc.sentiment_score)
 }
 
 // reduce

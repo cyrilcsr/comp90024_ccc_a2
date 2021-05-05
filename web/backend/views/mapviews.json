@@ -1,0 +1,10 @@
+{
+    "_id": "_design/mapviews",
+    "language": "javascript",
+    "views": {
+        "metropolitan": {
+            "map": "function(doc){ emit([doc.metropolitan, doc.city], doc.sentiment_score) }",
+            "reduce": "_sum"
+        }
+    }
+  }
