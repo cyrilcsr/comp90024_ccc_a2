@@ -2,15 +2,15 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from 'react-bootstrap'
 
-import './FrontPage.module.css'
+import './css/Home.css'
 
 export default function FrontPage() {
     return (
-        <div className={'welcome'}>
+        <div className='welcome'>
             <h2>This is the Front Page</h2>
             <Button variant="outline-primary"> 
-                <Link to="/dashboard">Dashboard</Link>
-            </Button>          
+                <Link to="/scenario-1">See the data</Link>
+            </Button>         
         </div>
     )
 }
