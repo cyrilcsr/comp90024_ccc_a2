@@ -17,6 +17,14 @@
         "brand_trend": {
             "map": "function(doc){ if(doc.vaccine_brand){ emit([doc.vaccine_brand, doc.created_at], 1) } }",
             "reduce": "_count"
+        },
+        "brand_count": {
+            "map": "function(doc){ if(doc.vaccine_brand){ emit(doc.vaccine_brand, 1) } }",
+            "reduce": "_count"
+        },
+        "city_count": {
+            "map": "function(doc){ if(doc.city !== 'Australia'){ emit(doc.city, 1) } }",
+            "reduce": "_count"
         }
     }
   }

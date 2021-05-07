@@ -56,6 +56,7 @@ def num_tweet():
 def sentiment_score():
     city_name = request.args.get('city')
     sentiment_score = 0
+    data = {}
 
     for row in list(db.view('mapviews/city_total_sentiment_score', group=True)):
         if city_name == row.key:
@@ -63,13 +64,15 @@ def sentiment_score():
         elif city_name == 'rural' and is_rural(row.key[0]):
             sentiment_score += row.value
         elif city_name == 'total':
+            data[row.key] = row.value
             sentiment_score += row.value
 
     reponse = {
         "code": 200,
         "msg": 'success',
         "city": city_name,
-        "sentiment_score": sentiment_score
+        "sentiment_score": sentiment_score,
+        "data": data
     }
 
     return jsonify(reponse)
@@ -101,9 +104,48 @@ def sentiment_distribution():
         "data": data
     }
 
+    return jsonify(response)
 
+@app.route('/vaccine_brand')
+def vaccine_brand():
+    brands = []
+    counts = {}
+    for row in list(db.view('mapviews/brand_count', group=True)):
+        brands.append(row.key)
+        counts[row.key] = row.value
+    
+    response = {
+        "code": 200,
+        "msg": 'success',
+        "vaccine_brand": brands,
+        "counts": counts
+    }
 
     return jsonify(response)
+
+@app.route('/city_data')
+def city_data():
+    cities = ['Overall', 'Rural, Area']
+    counts = {'Overall': 0, 'Rural Area': 0}
+    total_score = 0
+
+    for row in list(db.view('mapviews/city_count', group=True)):
+        total_score += row.value
+        if(is_rural(row.key)):
+            counts['Rural Area'] += row.value
+        else:
+            cities.append(row.key)
+            counts[row.key] = row.value
+    counts['Overall'] = total_score
+    response = {
+        "code": 200,
+        "msg": 'success',
+        "city": cities,
+        "counts": counts
+    }
+
+    return jsonify(response)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
