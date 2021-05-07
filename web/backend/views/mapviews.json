@@ -6,11 +6,15 @@
             "map": "function(doc){ emit([doc.metropolitan, doc.city], doc.sentiment_score) }",
             "reduce": "_sum"
         },
-        "city": {
+        "city_total_sentiment_score": {
             "map": "function(doc){ if(doc.city !== 'Australia') { emit(doc.city, doc.sentiment_score) } }",
             "reduce": "_sum"
         },
-        "brand_trend":{
+        "sentiment_distribution": {
+            "map": "function(doc){ if(doc.city !== 'Australia') { emit([doc.city, doc.sentiment_score], 1) } }",
+            "reduce": "_count"
+        },
+        "brand_trend": {
             "map": "function(doc){ if(doc.vaccine_brand){ emit([doc.vaccine_brand, doc.created_at], 1) } }",
             "reduce": "_count"
         }

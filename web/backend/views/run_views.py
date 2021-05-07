@@ -1,6 +1,5 @@
-import json
-
 from couchdb.client import Server
+import json
 
 server = Server('http://admin:couchdb@172.26.133.237:5984')
 db = server['twitter_data']
