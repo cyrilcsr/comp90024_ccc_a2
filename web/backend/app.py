@@ -4,14 +4,53 @@ from flask import jsonify
 from flask import request
 from bs4 import BeautifulSoup
 
-
-
 app = Flask(__name__)
 server = Server('http://admin:couchdb@172.26.133.237:5984')
 db = server['twitter_data']
 
 def is_rural(city_name):
     return city_name not in ['Adelaide', 'Melbourne', 'Brisbane', 'Canberra', 'Perth', 'Sydney']
+
+@app.route('/num_tweet/')
+def num_tweet():
+    param = request.args.get('city')
+    data = {}
+    num_of_tweet = 0
+    pos_tweet = 0
+    neg_tweet = 0
+    neutral_tweet = 0
+
+    if(param == 'rural'):
+        for row in list(db.view('mapviews/rural_count', group=True)):
+            if(row.key > 0): pos_tweet += row.value
+            elif(row.key < 0): neg_tweet += row.value
+            else: neutral_tweet += row.value
+    else:
+        for row in list(db.view('mapviews/sentiment_distribution', group=True)):
+            if(param == 'total'):
+                if(row.key[1] > 0): pos_tweet += row.value
+                elif(row.key[1] < 0): neg_tweet += row.value
+                elif(row.key[1] == 0): neutral_tweet += row.value
+            elif(param == row.key[0]):
+                if(row.key[1] > 0): pos_tweet += row.value
+                elif(row.key[1] < 0): neg_tweet += row.value
+                elif(row.key[1] == 0): neutral_tweet += row.value
+
+    num_of_tweet = pos_tweet + neg_tweet + neutral_tweet  
+    response = {
+        "code": 200, 
+        "msg": 'success',
+        "data": {
+            "city": param,
+            "neg_tweet": neg_tweet,
+            "pos_tweet": pos_tweet,
+            "neutral_tweet": neutral_tweet,
+            "total_tweet": num_of_tweet
+        }
+        
+    }
+    
+    return jsonify(response)
 
 @app.route('/sentiment_score/')
 def sentiment_score():
@@ -61,6 +100,8 @@ def sentiment_distribution():
         "msg": 'success',
         "data": data
     }
+
+
 
     return jsonify(response)
 

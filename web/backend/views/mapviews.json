@@ -2,9 +2,9 @@
     "_id": "_design/mapviews",
     "language": "javascript",
     "views": {
-        "metropolitan": {
-            "map": "function(doc){ emit([doc.metropolitan, doc.city], doc.sentiment_score) }",
-            "reduce": "_sum"
+        "rural_count": {
+            "map": "function(doc){ if(!doc.metropolitan){ emit(doc.sentiment_score, 1) } }",
+            "reduce": "_count"
         },
         "city_total_sentiment_score": {
             "map": "function(doc){ if(doc.city !== 'Australia') { emit(doc.city, doc.sentiment_score) } }",
