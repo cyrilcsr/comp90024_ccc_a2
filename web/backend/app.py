@@ -13,65 +13,54 @@ def is_rural(city_name):
 
 @app.route('/num_tweet/')
 def num_tweet():
-    param = request.args.get('city')
+    param = request.args.get('option')
     data = {}
-    num_of_tweet = 0
-    pos_tweet = 0
-    neg_tweet = 0
-    neutral_tweet = 0
 
-    if(param == 'rural'):
-        for row in list(db.view('mapviews/rural_count', group=True)):
-            if(row.key > 0): pos_tweet += row.value
-            elif(row.key < 0): neg_tweet += row.value
-            else: neutral_tweet += row.value
-    else:
-        for row in list(db.view('mapviews/sentiment_distribution', group=True)):
-            if(param == 'total'):
-                if(row.key[1] > 0): pos_tweet += row.value
-                elif(row.key[1] < 0): neg_tweet += row.value
-                elif(row.key[1] == 0): neutral_tweet += row.value
-            elif(param == row.key[0]):
-                if(row.key[1] > 0): pos_tweet += row.value
-                elif(row.key[1] < 0): neg_tweet += row.value
-                elif(row.key[1] == 0): neutral_tweet += row.value
+    for row in list(db.view('mapviews/sentiment_distribution', group=True)):
 
-    num_of_tweet = pos_tweet + neg_tweet + neutral_tweet  
+        if(param == 'total' or (param == 'rural' and is_rural(row.key[0]))): key = param
+        elif(param == row.key[0] or (param == 'city' and not is_rural(row.key[0]))): key = row.key[0]
+        elif(param == 'rural' or param == 'city'): continue
+
+        if key not in data:
+            data[key] = {'total_tweet': 0, 'pos_tweet': 0, 'neg_tweet': 0, 'neutral_tweet': 0}
+
+        data[key]['total_tweet'] += row.value
+        if(row.key[1] > 0): data[key]['pos_tweet'] += row.value
+        elif(row.key[1] < 0): data[key]['neg_tweet'] += row.value
+        elif(row.key[1] == 0):  data[key]['neutral_tweet'] += row.value
+    
     response = {
         "code": 200, 
         "msg": 'success',
-        "data": {
-            "city": param,
-            "neg_tweet": neg_tweet,
-            "pos_tweet": pos_tweet,
-            "neutral_tweet": neutral_tweet,
-            "total_tweet": num_of_tweet
-        }
-        
+        "data": data
     }
     
     return jsonify(response)
 
+
 @app.route('/sentiment_score/')
 def sentiment_score():
-    city_name = request.args.get('city')
+    param = request.args.get('city')
     sentiment_score = 0
     data = {}
 
     for row in list(db.view('mapviews/city_total_sentiment_score', group=True)):
-        if city_name == row.key:
-            sentiment_score = row.value
-        elif city_name == 'rural' and is_rural(row.key[0]):
-            sentiment_score += row.value
-        elif city_name == 'total':
-            data[row.key] = row.value
-            sentiment_score += row.value
+
+        if param == row.key or (param == 'rural' and is_rural(row.key[0])):
+            data[param]['sentiment_score'] += row.value
+
+        elif param == 'total':
+            if (is_rural(row.key)): key = 'rural'
+            else: key = row.key
+
+            if key not in data:
+                data[key] = {'sentiment_score': 0}
+            data[key]['sentiment_score'] += row.value
 
     reponse = {
         "code": 200,
         "msg": 'success',
-        "city": city_name,
-        "sentiment_score": sentiment_score,
         "data": data
     }
 
@@ -79,19 +68,12 @@ def sentiment_score():
 
 @app.route('/sentiment_distribution/')
 def sentiment_distribution():
-    city_name = request.args.get('city')
+    param = request.args.get('city')
     result_dict= {}
     data = {}
 
     for row in list(db.view('mapviews/sentiment_distribution', group=True)):
-        if(city_name =='total'):
-            sentiment_score = str(row.key[1])
-            result_dict[sentiment_score] = row.value
-        elif(city_name == 'rural'):
-            if(is_rural(row.key[0])):
-                sentiment_score = str(row.key[1])
-                result_dict[sentiment_score] = row.value  
-        elif(row.key[0] == city_name):
+        if(param =='total' or (param == 'rural' and is_rural(row.key[0])) or row.key[0] == param):
             sentiment_score = str(row.key[1])
             result_dict[sentiment_score] = row.value
 
