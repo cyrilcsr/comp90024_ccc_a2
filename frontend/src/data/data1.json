@@ -1,0 +1,14 @@
+{
+    "type": "geojson",
+    "data": {
+        "type": "Feature",
+        "geometry": {
+            "type": "circle",
+            "coordinates": [135.2, -29.6]
+        },
+        "properties": {
+            "title": "Mapbox DC",
+            "marker-symbol": "monument"
+        }
+    }
+}

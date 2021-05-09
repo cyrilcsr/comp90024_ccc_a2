@@ -1,12 +1,23 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { Button } from 'react-bootstrap'
+import { useHistory } from 'react-router-dom'
+import Map from '../../components/Map'
 
 import './css/Home.css'
 
-export default function FrontPage() {
+function FrontPage() {
+    let history = useHistory();
+
+    function routeChange() {
+        history.push("/scenario-1");
+      }
+
+
     return (
-        <div className='welcome'>
-        </div>
+        <div className='map'>
+            <div></div>
+            <Map onClick={routeChange}/>
+        </div>  
     )
 }
+
+export default FrontPage
