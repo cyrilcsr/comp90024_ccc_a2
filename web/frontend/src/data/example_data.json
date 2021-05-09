@@ -27,6 +27,20 @@
           ],
           "type": "Point"
         }
+      },
+      {
+        "type": "Feature",
+        "properties":{
+          "name": "rural",
+          "type": "rural"
+        },
+        "geometry": {
+          "coordinates": [
+            135.2, 
+            -29.6
+          ],
+          "type": "Point"
+        }
       }
     ],
     "type": "FeatureCollection"

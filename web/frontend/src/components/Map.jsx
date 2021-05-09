@@ -15,20 +15,29 @@ const Map = ({ onClick }) => {
   const [map, setMap] = useState(null);
   const mapContainer = useRef();
   
-
   useEffect(() => {
-    // prepare data
+    let cityUrl = 'http://127.0.0.1:5000/num_tweet/?option=city'
+    let ruralUrl = 'http://127.0.0.1:5000/num_tweet/?option=rural'
+    const cityRequest = axios.get(cityUrl);
+    const ruralRequest = axios.get(ruralUrl);
+    
     axios
-    .get('http://127.0.0.1:5000/num_tweet/?option=city')
-    .then(res => {
-      const data = res.data.data
+    .all([cityRequest, ruralRequest])
+    .then(axios.spread((...res) => {
+      const cityData = res[0].data.data
+      const ruralData = res[1].data.data
+
       ExampleData.features.forEach(location => {
-        if(data[location.properties.name]){
-          location.properties.total_tweet = data[location.properties.name].total_tweet
+        if(cityData[location.properties.name]){
+          location.properties.total_tweet = cityData[location.properties.name].total_tweet
         }
+        else if(ruralData[location.properties.name]){
+          location.properties.total_tweet = ruralData[location.properties.name].total_tweet
+        }
+
       })
-    })
-    .then(() => {
+    }))
+    .then(res => {
       mapboxgl.accessToken = 'pk.eyJ1IjoiamVhbnN4dCIsImEiOiJja2Y3anRnZzEwMzJpMnpsa29ldDExbnZ5In0.9VVP31HO-qw7t14WaWOZ6g';
       const initializeMap = ({ setMap, mapContainer }) => {
       const map = new mapboxgl.Map({
