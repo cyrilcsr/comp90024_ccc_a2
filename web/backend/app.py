@@ -2,16 +2,19 @@ from couchdb.client import Server
 from flask import Flask
 from flask import jsonify
 from flask import request
-from bs4 import BeautifulSoup
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+CORS(app)
 server = Server('http://admin:couchdb@172.26.133.237:5984')
 db = server['twitter_data']
 
 def is_rural(city_name):
     return city_name not in ['Adelaide', 'Melbourne', 'Brisbane', 'Canberra', 'Perth', 'Sydney']
 
-@app.route('/num_tweet/')
+
+@app.route('/num_tweet/', methods=['GET'])
 def num_tweet():
     param = request.args.get('option')
     data = {}
@@ -130,5 +133,5 @@ def city_data():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
 
