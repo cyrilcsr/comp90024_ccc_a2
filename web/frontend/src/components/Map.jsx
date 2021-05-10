@@ -8,7 +8,7 @@ import '../css/styles.css'
 
 
 // adding GeoJSON read from a file
-import ExampleData from "../data/example_data.json";
+import ExampleData from "../data/city_data.json";
 
 
 const Map = ({ onClick }) => {
@@ -18,6 +18,8 @@ const Map = ({ onClick }) => {
   useEffect(() => {
     let cityUrl = 'http://127.0.0.1:5000/num_tweet/?option=city'
     let ruralUrl = 'http://127.0.0.1:5000/num_tweet/?option=rural'
+    let radius = 10
+
     const cityRequest = axios.get(cityUrl);
     const ruralRequest = axios.get(ruralUrl);
     
@@ -44,7 +46,7 @@ const Map = ({ onClick }) => {
         container: mapContainer.current,
         style: "mapbox://styles/jeansxt/cko9nl9d81nsw17mpgbwn11ph", // stylesheet location
         center: [135.2, -29.6],
-        zoom: 3
+        zoom: 4
       });
       // map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
@@ -72,11 +74,50 @@ const Map = ({ onClick }) => {
               '#223b53',
               /* other */ '#ccc'
             ],
-            "circle-radius": ['+', -10, ['number', ['get', 'total_tweet'], -10]],
-            'circle-opacity': 0.8,
+            "circle-radius":['+', -10, ['number', ['get', 'total_tweet'], -10]],
+            'circle-opacity': 0.5,
           },
 
-        })
+        });
+
+        // Animate the circle
+        setInterval(() => {
+          map.setPaintProperty('city_tweet-circle', 'circle-radius', radius);
+          radius = ++radius % 40;
+        }, 100);
+
+        // Create a popup, but don't add it to the map yet.
+        var popup = new mapboxgl.Popup({
+          closeButton: false,
+          closeOnClick: false,
+          offset: 5
+        });
+
+        map.on('mouseenter', 'city_tweet', function (e) {
+          console.log(e)
+          // Change the cursor style as a UI indicator.
+          map.getCanvas().style.cursor = 'pointer';
+           
+          var coordinates = e.features[0].geometry.coordinates.slice();
+          var description = e.features[0].properties.description;
+           
+          // Ensure that if the map is zoomed out such that multiple
+          // copies of the feature are visible, the popup appears
+          // over the copy being pointed to.
+          while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+          }
+           
+          // Populate the popup and set its coordinates
+          // based on the feature found.
+          popup.setLngLat(coordinates).setHTML(description).addTo(map);
+        });
+         
+        map.on('mouseleave', 'city_tweet', function () {
+          map.getCanvas().style.cursor = '';
+          popup.remove();
+        });
+
       });
     };
     if (!map) initializeMap({ setMap, mapContainer });

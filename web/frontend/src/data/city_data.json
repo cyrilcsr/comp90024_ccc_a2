@@ -1,0 +1,93 @@
+{
+    "features": [
+      {
+        "type": "Feature",
+        "properties":{
+          "name": "Melbourne",
+          "type": "metropolitan",
+          "description":"<strong>Melbourne</strong><p>- # Tweets: 20M </p>"
+        },
+        "geometry": {
+          "coordinates": [
+            144.946457,
+            -37.840935
+          ],
+          "type": "Point"
+        }
+      },
+      {
+        "type": "Feature",
+        "properties":{
+          "name": "Sydney",
+          "type": "metropolitan",
+          "description":"<strong>Melbourne</strong><p>- # Tweets: 20M </p>"
+        },
+        "geometry": {
+          "coordinates": [
+            151.209900,
+            -33.865143
+          ],
+          "type": "Point"
+        }
+      },
+      {
+        "type": "Feature",
+        "properties":{
+          "name": "rural",
+          "type": "rural",
+          "description":"<strong>Melbourne</strong><p>- # Tweets: 20M </p>"
+        },
+        "geometry": {
+          "coordinates": [
+            133.7751, 
+            -25.2744
+          ],
+          "type": "Point"
+        }
+      },
+      {
+        "type": "Feature",
+        "properties":{
+          "name": "Brisbane",
+          "type": "metropolitan",
+          "description":"<strong>Melbourne</strong><p>- # Tweets: 20M </p>"
+        },
+        "geometry": {
+          "coordinates": [
+            153.0260,
+            -27.4705
+          ],
+          "type": "Point"
+        }
+      },{
+        "type": "Feature",
+        "properties":{
+          "name": "Perth",
+          "type": "metropolitan",
+          "description":"<strong>Melbourne</strong><p>- # Tweets: 20M </p>"
+        },
+        "geometry": {
+          "coordinates": [
+            115.8613,
+            -31.9523
+          ],
+          "type": "Point"
+        }
+      },{
+        "type": "Feature",
+        "properties":{
+          "name": "Adelaide",
+          "type": "metropolitan",
+          "description":"<strong>Melbourne</strong><p>- # Tweets: 20M </p>"
+        },
+        "geometry": {
+          "coordinates": [
+            138.6007,
+            -34.9285
+          ],
+          "type": "Point"
+        }
+      }
+    ],
+    "type": "FeatureCollection"
+  }
