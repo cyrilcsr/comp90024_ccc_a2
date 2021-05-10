@@ -22,6 +22,7 @@ const Map = ({ onClick }) => {
 
     const cityRequest = axios.get(cityUrl);
     const ruralRequest = axios.get(ruralUrl);
+
     
     axios
     .all([cityRequest, ruralRequest])
@@ -32,9 +33,16 @@ const Map = ({ onClick }) => {
       ExampleData.features.forEach(location => {
         if(cityData[location.properties.name]){
           location.properties.total_tweet = cityData[location.properties.name].total_tweet
+          location.properties.pos_tweet = cityData[location.properties.name].pos_tweet
+          location.properties.neg_tweet = cityData[location.properties.name].neg_tweet
+          location.properties.neutral_tweet = cityData[location.properties.name].neutral_tweet
         }
         else if(ruralData[location.properties.name]){
           location.properties.total_tweet = ruralData[location.properties.name].total_tweet
+          location.properties.pos_tweet = ruralData[location.properties.name].pos_tweet
+          location.properties.neg_tweet = ruralData[location.properties.name].neg_tweet
+          location.properties.neutral_tweet = ruralData[location.properties.name].neutral_tweet
+          location.properties.name = 'Rural Area'
         }
 
       })
@@ -61,7 +69,7 @@ const Map = ({ onClick }) => {
 
         // add a circle layer to the map
         map.addLayer({
-          id: "city_tweet-circle",
+          id: "city_tweet",
           type: "circle",
           source: "city_tweet",
           paint: {
@@ -80,52 +88,48 @@ const Map = ({ onClick }) => {
 
         });
 
-        // Animate the circle
-        setInterval(() => {
-          map.setPaintProperty('city_tweet-circle', 'circle-radius', radius);
-          radius = ++radius % 40;
-        }, 100);
-
-        // Create a popup, but don't add it to the map yet.
+        // my cute tiny popup
         var popup = new mapboxgl.Popup({
           closeButton: false,
-          closeOnClick: false,
-          offset: 5
+          closeOnClick: false
         });
 
-        map.on('mouseenter', 'city_tweet', function (e) {
-          console.log(e)
-          // Change the cursor style as a UI indicator.
-          map.getCanvas().style.cursor = 'pointer';
-           
-          var coordinates = e.features[0].geometry.coordinates.slice();
-          var description = e.features[0].properties.description;
-           
-          // Ensure that if the map is zoomed out such that multiple
-          // copies of the feature are visible, the popup appears
-          // over the copy being pointed to.
-          while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-          }
-           
-          // Populate the popup and set its coordinates
-          // based on the feature found.
-          popup.setLngLat(coordinates).setHTML(description).addTo(map);
-        });
-         
-        map.on('mouseleave', 'city_tweet', function () {
-          map.getCanvas().style.cursor = '';
-          popup.remove();
-        });
+        function constructHTML(ele){
+          return `
+          <div style="text-align: center;"><p style="font-size: 20px; margin-bottom: 0;">${ele.name}</p></div>
+          <div><strong>total tweet</strong>: ${ele.total_tweet}</div>
+          <div><strong>positive tweet</strong>: ${ele.pos_tweet}</div>
+          <div><strong>neutral tweet</strong>: ${ele.neutral_tweet}</div>
+          <div><strong>negtive tweet</strong>: ${ele.neg_tweet}</div>
+          `
+        }
 
-      });
+        map.on('mousemove', 'city_tweet', (e) => {
+          map.getCanvas().style.cursor = 'pointer'
+
+          popup.setLngLat(e.features[0].geometry.coordinates)
+          .setHTML(constructHTML(e.features[0].properties))
+          .addTo(map);
+          
+        })
+
+        map.on('mouseleave', 'city_tweet', (e) => {
+          map.getCanvas().style.cursor = ''
+        })
+
+      })
+
+
     };
     if (!map) initializeMap({ setMap, mapContainer });
+
   })
 }, [map]);
+
+
   
 
-  return <div ref={mapContainer} className='map' onClick={onClick}/>;
+  return <div ref={mapContainer} className='map'/>;
 };
 
 

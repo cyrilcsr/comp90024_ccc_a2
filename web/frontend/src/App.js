@@ -15,7 +15,6 @@ function App() {
       <Route path="/scenario-1" component={Scenario1} />
       <Route path="/scenario-2" component={Scenario2} />
       <Route path="/scenario-3" component={Scenario3} />
-
     </Router>
   );
 }
