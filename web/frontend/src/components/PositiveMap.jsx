@@ -11,7 +11,7 @@ import '../css/styles.css'
 import ExampleData from "../data/city_data.json";
 
 
-const Map = ({ onClick }) => {
+const PositveMap = ({ onClick }) => {
   const [map, setMap] = useState(null);
   const mapContainer = useRef();
   
@@ -24,7 +24,7 @@ const Map = ({ onClick }) => {
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/jeansxt/cko9nl9d81nsw17mpgbwn11ph", // stylesheet location
-      center: [135.2, -26.3],
+      center: [135.2, -26.6],
       zoom: 4
     });
     // map.addControl(new mapboxgl.NavigationControl(), 'top-right');
@@ -40,24 +40,24 @@ const Map = ({ onClick }) => {
 
       ExampleData.features.forEach(location => {
         if(data[location.properties.name]){
-          location.properties.total_tweet = data[location.properties.name].total_tweet
-          location.properties.pos_tweet = data[location.properties.name].pos_tweet
-          location.properties.neg_tweet = data[location.properties.name].neg_tweet
-          location.properties.neutral_tweet = data[location.properties.name].neutral_tweet
+          let total = data[location.properties.name].total_tweet
+          let pos = data[location.properties.name].pos_tweet
+          location.properties.total_tweet = total
+          location.properties.pos_tweet = pos
         }
       })
     })
       .then(() => {
 
-        map.addSource("city_tweet", {
+        map.addSource("positive_tweet", {
           type: "geojson",
           data: ExampleData
         })
         // add a circle layer to the map
         map.addLayer({
-          id: "city_tweet",
+          id: "positive_tweet",
           type: "circle",
-          source: "city_tweet",
+          source: "positive_tweet",
           paint: {
             'circle-color':[
               'match',
@@ -68,7 +68,7 @@ const Map = ({ onClick }) => {
               '#223b53',
               /* other */ '#ccc'
             ],
-            "circle-radius":['+', -10, ['number', ['get', 'total_tweet'], -10]],
+            "circle-radius":['+', -10, ['number', ['get', 'pos_tweet'], -10]],
             'circle-opacity': 0.5,
           },
 
@@ -83,14 +83,11 @@ const Map = ({ onClick }) => {
         function constructHTML(ele){
           return `
           <div style="text-align: center;"><p style="font-size: 20px; margin-bottom: 0;">${ele.name}</p></div>
-          <div><strong>total tweet</strong>: ${ele.total_tweet}</div>
-          <div><strong>positive tweet</strong>: ${ele.pos_tweet}</div>
-          <div><strong>neutral tweet</strong>: ${ele.neutral_tweet}</div>
-          <div><strong>negtive tweet</strong>: ${ele.neg_tweet}</div>
+          <div><strong>support raio </strong>: ${100 * (ele.pos_tweet / ele.total_tweet).toPrecision(2)}%</div>
           `
         }
 
-        map.on('mousemove', 'city_tweet', (e) => {
+        map.on('mousemove', 'positive_tweet', (e) => {
           map.getCanvas().style.cursor = 'pointer'
 
           popup.setLngLat(e.features[0].geometry.coordinates)
@@ -99,7 +96,7 @@ const Map = ({ onClick }) => {
           
         })
 
-        map.on('mouseleave', 'city_tweet', (e) => {
+        map.on('mouseleave', 'positive_tweet', (e) => {
           map.getCanvas().style.cursor = ''
         })
       })
@@ -110,9 +107,9 @@ const Map = ({ onClick }) => {
 
 }, [map])
 
-return <div ref={mapContainer} className='map' onClick={onClick}/>;
+return <div ref={mapContainer} className='pos-map'onClick={onClick}/>;
 
 }
 
 
-export default Map;
+export default PositveMap;

@@ -2,8 +2,12 @@
     "_id": "_design/mapviews",
     "language": "javascript",
     "views": {
-        "rural_count": {
-            "map": "function(doc){ if(!doc.metropolitan){ emit(doc.sentiment_score, 1) } }",
+        "positive_score": {
+            "map": "function(doc){ if(doc.sentiment_score > 0) { emit(doc.city, 1) } }",
+            "reduce": "_count"
+        },
+        "other_score": {
+            "map": "function(doc){ if(doc.sentiment_score <= 0) { emit(doc.city, 1) } }",
             "reduce": "_count"
         },
         "city_total_sentiment_score": {

@@ -2,7 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import Map from '../../components/Map'
 
-import './css/Home.css'
+import '../css/Home.css'
 
 function FrontPage() {
     let history = useHistory();

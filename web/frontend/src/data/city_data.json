@@ -33,7 +33,7 @@
       {
         "type": "Feature",
         "properties":{
-          "name": "rural",
+          "name": "RuralArea",
           "type": "rural",
           "description":"<strong>Melbourne</strong><p>- # Tweets: 20M </p>"
         },

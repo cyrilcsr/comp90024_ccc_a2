@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import Nav from '../../components/Nav'
-import './css/Scenarios.css'
+import '../css/Scenarios.css'
 
 export default class Scenario3 extends Component {
 

@@ -1,47 +1,30 @@
 {
-    "features": [
-      {
-        "type": "Feature",
-        "properties":{
-          "name": "Melbourne",
-          "type": "metropolitan"
-        },
-        "geometry": {
-          "coordinates": [
-            144.946457,
-            -37.840935
-          ],
-          "type": "Point"
-        }
-      },
-      {
-        "type": "Feature",
-        "properties":{
-          "name": "Sydney",
-          "type": "metropolitan"
-        },
-        "geometry": {
-          "coordinates": [
-            151.209900,
-            -33.865143
-          ],
-          "type": "Point"
-        }
-      },
-      {
-        "type": "Feature",
-        "properties":{
-          "name": "rural",
-          "type": "rural"
-        },
-        "geometry": {
-          "coordinates": [
-            133.7751, 
-            -25.2744
-          ],
-          "type": "Point"
-        }
-      }
-    ],
-    "type": "FeatureCollection"
+  "Melbourne":{
+    "positive": 0,
+    "others": 0
+  },
+  "Sydney":{
+    "positive": 0,
+    "others": 0
+  },
+  "Canberra":{
+    "positive": 0,
+    "others": 0
+  },
+  "Perth":{
+    "positive": 0,
+    "others": 0
+  },
+  "Adelaide":{
+    "positive": 0,
+    "others": 0
+  },
+  "RuralArea":{
+    "positive": 0,
+    "others": 0
+  },
+  "total":{
+    "positive": 0,
+    "others": 0
   }
+}

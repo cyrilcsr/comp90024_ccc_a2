@@ -1,5 +1,5 @@
 from couchdb.client import Server
-from flask import Flask
+from flask import Flask, json
 from flask import jsonify
 from flask import request
 from flask_cors import CORS
@@ -13,39 +13,96 @@ db = server['twitter_data']
 def is_rural(city_name):
     return city_name not in ['Adelaide', 'Melbourne', 'Brisbane', 'Canberra', 'Perth', 'Sydney']
 
+def build_dic():
+    return {'total_tweet':0, 'pos_tweet':0, 'neg_tweet':0, 'neutral_tweet':0}
 
-@app.route('/num_tweet/', methods=['GET'])
-def num_tweet():
+
+@app.route('/num_tweet_city/')
+def num_tweet_city():
     param = request.args.get('option')
-    data = {}
+    data = build_dic()
 
     for row in list(db.view('mapviews/sentiment_distribution', group=True)):
-
-        if(param == 'total' or (param == 'rural' and is_rural(row.key[0]))): key = param
-        elif(param == row.key[0] or (param == 'city' and not is_rural(row.key[0]))): key = row.key[0]
-        elif(param == 'rural' or param == 'city'): continue
-
-        if key not in data:
-            data[key] = {'total_tweet': 0, 'pos_tweet': 0, 'neg_tweet': 0, 'neutral_tweet': 0}
-
-        data[key]['total_tweet'] += row.value
-        if(row.key[1] > 0): data[key]['pos_tweet'] += row.value
-        elif(row.key[1] < 0): data[key]['neg_tweet'] += row.value
-        elif(row.key[1] == 0):  data[key]['neutral_tweet'] += row.value
-    
+        if(param == row.key[0]):
+            data['total_tweet'] += row.value
+            if(row.key[1] > 0): data['pos_tweet'] += row.value
+            elif(row.key[1] < 0): data['neg_tweet'] += row.value
+            elif(row.key[1] == 0):  data['neutral_tweet'] += row.value
+        
     response = {
         "code": 200, 
         "msg": 'success',
+        'city': param,
         "data": data
     }
     
+    return jsonify(response)
+
+@app.route('/total_num_tweet/')
+def total_num_tweet():
+    param = request.args.get('option')
+    data = {}
+    data['total'] = build_dic()
+
+    for row in list(db.view('mapviews/sentiment_distribution', group=True)):
+        if(is_rural(row.key[0])): key = 'RuralArea'
+        elif(param == 'sum'): key = 'city'
+        else: key = row.key[0]
+        
+        if key not in data: data[key] = build_dic()
+        
+        data[key]['total_tweet'] += row.value
+        data['total']['total_tweet'] += row.value
+        if(row.key[1] > 0): 
+            data[key]['pos_tweet'] += row.value
+            data['total']['pos_tweet'] += row.value
+        elif(row.key[1] < 0):
+            data['total']['neg_tweet'] += row.value
+            data[key]['neg_tweet'] += row.value
+        elif(row.key[1] == 0):  
+            data[key]['neutral_tweet'] += row.value
+            data['total']['neutral_tweet'] += row.value
+    
+    response = {
+        'code':200,
+        'msg': 'success',
+        'data': data
+    }
+
+    return jsonify(data)
+
+@app.route('/positive_score/')
+def positive_score():
+    data = {}
+    data['total'] = {'positive': 0, 'others': 0}
+    total_count = 0
+    for row in list(db.view('mapviews/positive_score', group=True)):
+        if(is_rural(row.key)): key = 'RuralArea'
+        else: key = row.key
+        if key not in data: data[key] = {'positive': 0, 'others': 0}
+        total_count += row.value
+        data[key]['positive'] += row.value
+    data['total']['positive'] = total_count
+
+    for row in list(db.view('mapviews/other_score', group=True)):
+        if(is_rural(row.key)): key = 'RuralArea'
+        else: key = row.key
+        total_count += row.value
+        data[key]['others'] += row.value
+    data['total']['others'] = total_count
+
+    response = {
+        'code': 200,
+        'msg': 'success',
+        'data': data
+    }
+
     return jsonify(response)
 
 
 @app.route('/sentiment_score/')
 def sentiment_score():
     param = request.args.get('city')
-    sentiment_score = 0
     data = {}
 
     for row in list(db.view('mapviews/city_total_sentiment_score', group=True)):
@@ -69,6 +126,7 @@ def sentiment_score():
 
     return jsonify(reponse)
 
+
 @app.route('/sentiment_distribution/')
 def sentiment_distribution():
     param = request.args.get('city')
@@ -80,7 +138,7 @@ def sentiment_distribution():
             sentiment_score = str(row.key[1])
             result_dict[sentiment_score] = row.value
 
-    data['city'] = city_name        
+    data['city'] = param        
     data['sentiment_count'] = result_dict
 
     response = {
@@ -134,4 +192,3 @@ def city_data():
 
 if __name__ == '__main__':
     app.run(debug=False)
-

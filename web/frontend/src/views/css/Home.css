@@ -25,6 +25,7 @@ h2 {
   font-size: 1.2em;
   text-align: left;
 }
+
 .mapboxgl-popup {
 max-width: 400px;
 font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
