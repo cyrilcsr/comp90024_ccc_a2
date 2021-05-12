@@ -18,12 +18,15 @@ export default class PositivePieRight extends Component {
               tooltip: {
 
               },
+              stroke:{
+                show: false
+              },
               labels: ['Support', 'Neutral or Not Support'],
               chart: {
-                width: 30,
+                width: 35,
                 type: 'pie'
               },
-              colors:['#F44336', '#242424'],
+              colors:['#fbb03b', '#242424'],
               responsive: [{
                 breakpoint: 480,
                 options: {
@@ -43,7 +46,7 @@ export default class PositivePieRight extends Component {
         this.setState({ 
           series1: [data.Brisbane.positive, data.Brisbane.others],
           // series2: [data.Perth.positive, data.Perth.others],
-          series3: [data.Canberra.positive, data.Canberra.others]
+          // series3: [data.Canberra.positive, data.Canberra.others]
       })
       })
     }
@@ -52,15 +55,15 @@ export default class PositivePieRight extends Component {
           <div className="positive-charts">
             <div className='pos-pie-chart'>
               <h3 className='city-name'>Brisbane</h3>
-              <Chart type="pie" series={this.state.series1} options={this.state.options} />
+              <Chart type="pie" series={this.state.series1} options={this.state.options} className='positive-chart'/>
             </div>
             <div className='pos-pie-chart'>
               <h3 className='city-name'>Perth</h3>
-              <Chart type="pie" series={this.state.series2} options={this.state.options} />
+              <Chart type="pie" series={this.state.series2} options={this.state.options} className='positive-chart'/>
             </div>
             <div className='pos-pie-chart'>
               <h3 className='city-name'>Canberra</h3>
-              <Chart type="pie" series={this.state.series3} options={this.state.options} />
+              <Chart type="pie" series={this.state.series3} options={this.state.options} className='positive-chart'/>
             </div>
         </div>
         )

@@ -1,11 +1,19 @@
 .scenario {
     height: 100vh;
+    width: 100vw;
     background-color: #242424;
     padding-left: 1rem;
+    align-items: center;
 }
 
-.scenario-body {
-    padding: 3rem;
+.scenario1-body {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 80%;
+    margin: 0;
+    padding: 100px 0 0 0;
 }
 
 .scenario-title {

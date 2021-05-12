@@ -4,14 +4,14 @@ import PositiveMap from '../../components/PositiveMap'
 import PositivePieLeft from '../../components/PositivePieLeft'
 import PositivePieRight from '../../components/PositivePieRight'
 
-import '../css/Scenarios.css'
+import '../../css/styles.css'
 
 export default function OpenPage() {
     return (
         <div className='pos-map-container scenario'>
-            <PositivePieLeft />
+            <PositivePieLeft className='positive-charts'/>
             <PositiveMap className='positive-map'/>
-            <PositivePieRight />
+            <PositivePieRight className='positive-charts'/>
         </div>
 
     )

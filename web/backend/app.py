@@ -7,8 +7,10 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
-server = Server('http://admin:couchdb@172.26.133.237:5984')
-db = server['twitter_data']
+server1 = Server('http://admin:couchdb@172.26.133.237:5984')
+server2 = Server('http://admin:couchdb@172.26.128.245:5984')
+branddb = server1['twitter_data']
+vaccine = server2['twitter_data']
 
 def is_rural(city_name):
     return city_name not in ['Adelaide', 'Melbourne', 'Brisbane', 'Canberra', 'Perth', 'Sydney']
@@ -22,7 +24,7 @@ def num_tweet_city():
     param = request.args.get('option')
     data = build_dic()
 
-    for row in list(db.view('mapviews/sentiment_distribution', group=True)):
+    for row in list(vaccine.view('mapviews/sentiment_distribution', group=True)):
         if(param == row.key[0]):
             data['total_tweet'] += row.value
             if(row.key[1] > 0): data['pos_tweet'] += row.value
@@ -38,13 +40,39 @@ def num_tweet_city():
     
     return jsonify(response)
 
+@app.route('/vaccine_trend/')
+def vaccine_trend():
+    location = request.args.get('location')
+    data = {}
+    for row in list(vaccine.view('mapviews/posneg_vaccine_trend', group=True)):
+        if(location == 'Overall Tweet' or location == row.key[2] or (location == 'rural' and is_rural(row.key[2]))):
+            if row.key[0] not in data: data[row.key[0]] = {'pos': 0, 'neg': 0, 'total': 0}
+            if(row.key[1] == 'pos'): data[row.key[0]]['pos'] = row.value
+            elif(row.key[1] == 'neg'): data[row.key[0]]['neg'] = row.value
+            data[row.key[0]]['total'] = data[row.key[0]]['pos'] + data[row.key[0]]['neg']
+    
+    return jsonify(data)
+
+@app.route('/brand_trend/')
+def brand_trend():
+    brand = request.args.get('brand')
+    data = {}
+    for row in list(branddb.view('mapviews/brand_trend', group=True)):
+        if(brand == 'Overall Brands' or brand.lower() == row.key[2]):
+            if row.key[0] not in data: data[row.key[0]] = {'pos': 0, 'neg': 0, 'total': 0}
+            if(row.key[1] == 'pos'): data[row.key[0]]['pos'] = row.value
+            elif(row.key[1] == 'neg'): data[row.key[0]]['neg'] = row.value
+            data[row.key[0]]['total'] = data[row.key[0]]['pos'] + data[row.key[0]]['neg']
+    
+    return jsonify(data)
+
 @app.route('/total_num_tweet/')
 def total_num_tweet():
     param = request.args.get('option')
     data = {}
     data['total'] = build_dic()
 
-    for row in list(db.view('mapviews/sentiment_distribution', group=True)):
+    for row in list(vaccine.view('mapviews/sentiment_distribution', group=True)):
         if(is_rural(row.key[0])): key = 'RuralArea'
         elif(param == 'sum'): key = 'city'
         else: key = row.key[0]
@@ -76,7 +104,7 @@ def positive_score():
     data = {}
     data['total'] = {'positive': 0, 'others': 0}
     total_count = 0
-    for row in list(db.view('mapviews/positive_score', group=True)):
+    for row in list(vaccine.view('mapviews/positive_score', group=True)):
         if(is_rural(row.key)): key = 'RuralArea'
         else: key = row.key
         if key not in data: data[key] = {'positive': 0, 'others': 0}
@@ -84,9 +112,10 @@ def positive_score():
         data[key]['positive'] += row.value
     data['total']['positive'] = total_count
 
-    for row in list(db.view('mapviews/other_score', group=True)):
+    for row in list(vaccine.view('mapviews/other_score', group=True)):
         if(is_rural(row.key)): key = 'RuralArea'
         else: key = row.key
+        if key not in data: data[key] = {'positive': 0, 'others': 0}
         total_count += row.value
         data[key]['others'] += row.value
     data['total']['others'] = total_count
@@ -105,7 +134,7 @@ def sentiment_score():
     param = request.args.get('city')
     data = {}
 
-    for row in list(db.view('mapviews/city_total_sentiment_score', group=True)):
+    for row in list(vaccine.view('mapviews/city_total_sentiment_score', group=True)):
 
         if param == row.key or (param == 'rural' and is_rural(row.key[0])):
             data[param]['sentiment_score'] += row.value
@@ -133,7 +162,7 @@ def sentiment_distribution():
     result_dict= {}
     data = {}
 
-    for row in list(db.view('mapviews/sentiment_distribution', group=True)):
+    for row in list(vaccine.view('mapviews/sentiment_distribution', group=True)):
         if(param =='total' or (param == 'rural' and is_rural(row.key[0])) or row.key[0] == param):
             sentiment_score = str(row.key[1])
             result_dict[sentiment_score] = row.value
@@ -151,10 +180,11 @@ def sentiment_distribution():
 
 @app.route('/vaccine_brand')
 def vaccine_brand():
-    brands = []
-    counts = {}
-    for row in list(db.view('mapviews/brand_count', group=True)):
-        brands.append(row.key)
+    brands = ["Overall Brands"]
+    counts = {"Overall Brands": 0}
+
+    for row in list(branddb.view('mapviews/brand_count', group=True)):
+        brands.append(str.capitalize(row.key))
         counts[row.key] = row.value
     
     response = {
@@ -168,18 +198,18 @@ def vaccine_brand():
 
 @app.route('/city_data')
 def city_data():
-    cities = ['Overall', 'Rural, Area']
-    counts = {'Overall': 0, 'Rural Area': 0}
+    cities = ['Overall Tweet', 'Rural Area']
+    counts = {'Overall Tweet': 0, 'Rural Area': 0}
     total_score = 0
 
-    for row in list(db.view('mapviews/city_count', group=True)):
+    for row in list(vaccine.view('mapviews/city_count', group=True)):
         total_score += row.value
         if(is_rural(row.key)):
             counts['Rural Area'] += row.value
         else:
             cities.append(row.key)
             counts[row.key] = row.value
-    counts['Overall'] = total_score
+    counts['Overall Tweet'] = total_score
     response = {
         "code": 200,
         "msg": 'success',

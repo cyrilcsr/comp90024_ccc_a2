@@ -10,9 +10,12 @@ export default class PositivePieLeft extends Component {
         this.state = {
             series1: [1, 1],
             series2: [1, 1],
-            series3: [1,1 ],
+            series3: [1, 1],
             options: {
               legend: {
+                show: false
+              },
+              stroke:{
                 show: false
               },
               tooltip: {
@@ -20,10 +23,10 @@ export default class PositivePieLeft extends Component {
               },
               labels: ['Support', 'Neutral or Not Support'],
               chart: {
-                width: 30,
+                width: 35,
                 type: 'pie'
               },
-              colors:['#F44336', '#242424'],
+              colors:['#fbb03b', '#242424'],
               responsive: [{
                 breakpoint: 480,
                 options: {
@@ -52,15 +55,15 @@ export default class PositivePieLeft extends Component {
         <div className="positive-charts">
           <div className='pos-pie-chart'>
             <h3 className='city-name'>Sydney</h3>
-            <Chart type="pie" series={this.state.series1} options={this.state.options} />
+            <Chart type="pie" series={this.state.series1} options={this.state.options} className='positive-chart'/>
           </div>
           <div className='pos-pie-chart'>
             <h3 className='city-name'>Melbourne</h3>
-            <Chart type="pie" series={this.state.series2} options={this.state.options} />
+            <Chart type="pie" series={this.state.series2} options={this.state.options} className='positive-chart'/>
           </div>
           <div className='pos-pie-chart'>
             <h3 className='city-name'>Adelaide</h3>
-            <Chart type="pie" series={this.state.series3} options={this.state.options} />
+            <Chart type="pie" series={this.state.series3} options={this.state.options} className='positive-chart'/>
           </div>
         </div>
         )
