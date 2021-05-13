@@ -9,7 +9,7 @@ import '../css/styles.css'
 export default class VaccineLine extends Component {
     constructor(props) {
         super(props);
-        this.handleChange = this.handleChange.bind(this)
+        // this.handleChange = this.handleChange.bind(this)
         this.state = {
           param: 'Overall Tweet',
           needUpdate: false,

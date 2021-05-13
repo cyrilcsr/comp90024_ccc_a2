@@ -26,7 +26,7 @@ export default class PositivePieLeft extends Component {
                 width: 35,
                 type: 'pie'
               },
-              colors:['#fbb03b', '#242424'],
+              colors:['#fbb03b', '#3e3c3c'],
               responsive: [{
                 breakpoint: 480,
                 options: {
@@ -39,9 +39,7 @@ export default class PositivePieLeft extends Component {
 
     componentDidMount(){
       const url = 'http://127.0.0.1:5000/positive_score/'
-      axios
-      .get(url)
-      .then(res => {
+      axios.get(url).then(res => {
         const data = res.data.data
         this.setState({ 
           series1: [data.Sydney.positive, data.Sydney.others],

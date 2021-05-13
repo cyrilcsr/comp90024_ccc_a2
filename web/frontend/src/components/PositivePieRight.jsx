@@ -26,7 +26,7 @@ export default class PositivePieRight extends Component {
                 width: 35,
                 type: 'pie'
               },
-              colors:['#fbb03b', '#242424'],
+              colors:['#fbb03b', '#3e3c3c'],
               responsive: [{
                 breakpoint: 480,
                 options: {
@@ -46,7 +46,7 @@ export default class PositivePieRight extends Component {
         this.setState({ 
           series1: [data.Brisbane.positive, data.Brisbane.others],
           // series2: [data.Perth.positive, data.Perth.others],
-          // series3: [data.Canberra.positive, data.Canberra.others]
+          // series3: [data.RuralArea.positive, data.RuralArea.others]
       })
       })
     }
@@ -62,7 +62,7 @@ export default class PositivePieRight extends Component {
               <Chart type="pie" series={this.state.series2} options={this.state.options} className='positive-chart'/>
             </div>
             <div className='pos-pie-chart'>
-              <h3 className='city-name'>Canberra</h3>
+              <h3 className='city-name'>Rural Area</h3>
               <Chart type="pie" series={this.state.series3} options={this.state.options} className='positive-chart'/>
             </div>
         </div>

@@ -13,10 +13,12 @@ function FrontPage() {
 
 
     return (
-        <div className='map'>
-            <div></div>
-            <Map onClick={routeChange}/>
-        </div>
+        
+            <div className='map'>
+                <div></div>
+                <Map onClick={routeChange}/>
+            </div>
+
     )
 }
 

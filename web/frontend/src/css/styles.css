@@ -24,12 +24,7 @@
 }
 
 
-#map {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-}
+
 #title {
   top: 0;
   left: 20px;
@@ -108,3 +103,28 @@ font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
 .selection {
   padding-bottom: 20px;
 }
+
+.parent {
+display: grid;
+grid-template-columns: repeat(5, 1fr);
+grid-template-rows: 1.1fr repeat(3, 1.2fr);
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+}
+
+.div1 { grid-area: 1 / 2 / 2 / 5; }
+.div2 { grid-area: 2 / 1 / 5 / 5; }
+.div3 { grid-area: 2 / 5 / 5 / 6; }
+
+
+.parallel {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+grid-template-rows: 1.1fr repeat(2, 1.3fr) 1.4fr;
+grid-column-gap: 0px;
+grid-row-gap: 0px;
+}
+
+.div4 { grid-area: 1 / 1 / 2 / 5; }
+.div5 { grid-area: 2 / 1 / 5 / 3; }
+.div6 { grid-area: 2 / 3 / 5 / 5; }

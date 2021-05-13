@@ -18,14 +18,13 @@ const PositveMap = ({ onClick }) => {
   useEffect(() => {
     const url = 'http://127.0.0.1:5000/total_num_tweet/'
     // let radius = 10
-
     mapboxgl.accessToken = 'pk.eyJ1IjoiamVhbnN4dCIsImEiOiJja2Y3anRnZzEwMzJpMnpsa29ldDExbnZ5In0.9VVP31HO-qw7t14WaWOZ6g';
     const initializeMap = ({ setMap, mapContainer }) => {
     const map = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/jeansxt/cko9nl9d81nsw17mpgbwn11ph", // stylesheet location
-      center: [135.2, -26.6],
-      zoom: 4
+      center: [135.2, -28], 
+      zoom: 3.5
     });
     // map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
