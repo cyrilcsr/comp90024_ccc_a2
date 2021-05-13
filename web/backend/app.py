@@ -219,6 +219,30 @@ def city_data():
 
     return jsonify(response)
 
+@app.route('/brand_stat/')
+def brand_stat():
+    data = {}
+
+    for row in list(branddb.view('mapviews/brand_view', group=True)):
+        if row.key[0] not in data: data[row.key[0]] = []
+        pos_tweet, neg_tweet, neutral_tweet, total = 0, 0, 0, 0
+        if row.key[2] == 'pos': pos_tweet = row.value
+        elif row.key[2] == 'neg': neg_tweet = row.value
+        else: neutral_tweet = row.value
+        total = pos_tweet + neg_tweet + neutral_tweet
+        stat_row = [row.key[1], total, pos_tweet, neg_tweet, neutral_tweet]
+        data[row.key[0]].append(stat_row)
+    for row in list(branddb.view('mapviews/brand_sentiment', group=True)):
+        stats = data[row.key[0]]
+        for stat in stats:
+            if stat[0] == row.key[1]: stat.append(row.value)
+    
+    return jsonify({
+        'code': 200,
+        'structure': ['date', 'total_tweet', 'pos_tweet', 'neg_tweet', 'neutral_tweet', 'sentiment_score'],
+        'data': data
+    })
+
 
 if __name__ == '__main__':
     app.run(debug=False)
