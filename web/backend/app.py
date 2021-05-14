@@ -10,6 +10,7 @@ CORS(app)
 server1 = Server('http://admin:couchdb@172.26.133.237:5984')
 server2 = Server('http://admin:couchdb@172.26.128.245:5984')
 branddb = server1['twitter_data']
+parties = server1['parties_data']
 vaccine = server2['twitter_data']
 
 def is_rural(city_name):
@@ -243,6 +244,50 @@ def brand_stat():
         'data': data
     })
 
+@app.route('/political_party/')
+def political_party():
+    data = {}
+    param = request.args.get('party')
+    views = 'mapviews/data_' + param
+    key = 0
+    for row in list(parties.view(views)):
+        key += 1
+
+        arr = row.id[1:-2].split(',')
+        coordinates = []
+        for k in arr: coordinates.append(float(k))
+
+        data[key] = {'coordinates': coordinates, param: row.value}
+
+    response = {
+        'code': 200,
+        'mag': 'success',
+        'data': data
+    }
+
+    return jsonify(response)
+
+@app.route('/political_party_per_area/')
+def political_party_per_area():
+    param = request.args.get('state')
+    data = {'state': param, 'the_greens': {}, 'the_nationals': {}, 'australian_labor_party': {}, 'liberal': {}}
+    
+    for row in list(parties.view('mapviews/stats_the_greens', group=True)):
+        if row.key[0] == param: data['the_greens'][row.key[1]] = row.value
+    for row in list(parties.view('mapviews/stats_the_nationals', group=True)):
+        if row.key[0] == param: data['the_nationals'][row.key[1]] = row.value
+    for row in list(parties.view('mapviews/stats_australian_labor_party', group=True)):
+        if row.key[0] == param: data['australian_labor_party'][row.key[1]] = row.value
+    for row in list(parties.view('mapviews/stats_liberal', group=True)):
+        if row.key[0] == param: data['liberal'][row.key[1]] = row.value
+
+    data = {
+        'code': 200,
+        'msg': 'success',
+        'data': data
+    }
+    
+    return jsonify(data)
 
 if __name__ == '__main__':
     app.run(debug=False)

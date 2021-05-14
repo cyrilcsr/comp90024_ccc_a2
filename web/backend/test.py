@@ -1,12 +1,36 @@
 from couchdb.client import Server
 import json
+import fnmatch
 
 print('starting')
-server = Server('http://admin:couchdb@172.26.128.245:5984')
+server = Server('http://admin:couchdb@172.26.133.237:5984')
 print('connected')
-db = server['twitter_data']
 
-with open('../../../../../record(1).json') as jsonfile:
-    for row in jsonfile:
-        data = json.loads(row)
-        db.save(data)
+if not 'parties_data' in server:
+    db = server.create('parties_data')
+else: db = server['parties_data']
+
+with open('../../../../../grouped_election_data(1).json') as jsonfile:
+    data = json.load(jsonfile)
+    jsonfile.close()
+    result = {}
+
+    feature_list = data['features']
+
+    for row in feature_list:
+        data = json.loads(json.dumps(row))
+        coordinate = str(data['geometry']['coordinates'])
+        property_dict = {i:j for i,j in data['properties'].items() if j != None}
+        doc = {'state': property_dict['state']}
+        pattern = '*_percent_group'
+        for item in property_dict:
+            if fnmatch.fnmatch(item, pattern):
+                party_name = item.replace('_percent_group', '')
+                doc[party_name] = property_dict[item]
+        result[coordinate] = doc
+
+
+    print('start uploading data')
+    for d in result:
+        if d not in db: db[d] = result[d]
+        

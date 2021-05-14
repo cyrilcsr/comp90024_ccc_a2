@@ -20,6 +20,9 @@ export default function SelectionBar({ handleChange,  name, type }) {
             setElements([...res.data.city])
     })
     }
+    else if(type === 'parties'){
+        setElements(['the_greens', 'australian_labor_party', 'liberal', 'the_nationals'])
+    }
     }, [type])
 
     return (

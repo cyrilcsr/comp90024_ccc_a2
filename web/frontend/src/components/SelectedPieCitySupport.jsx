@@ -11,6 +11,7 @@ export default class SelectedPieCitySupport extends Component {
         this.handleChange = this.handleChange.bind(this)
 
         this.state = {
+            param: 'the_greens',
             series: [1, 1],
 
             options: {
@@ -43,19 +44,15 @@ export default class SelectedPieCitySupport extends Component {
 
 
     renderChart(){
-      const url = 'http://127.0.0.1:5000/positive_score/'
+      const url = 'http://127.0.0.1:5000/political_party_per_area/'
       axios
-      .get(url)
+      .get(url, {
+        param: {
+          "party": this.state.param
+        }
+      })
       .then(res => {
         const data = res.data.data
-        this.setState({ 
-          series: [data.RuralArea.positive, data.RuralArea.others],
-          // series2: [data.Perth.positive, data.Perth.others],
-          // series3: [data.RuralArea.positive, data.RuralArea.others]
-        })
-          const neg_tweet = []
-          const pos_tweet = []
-          const total_tweet = []
 
         })
       }
@@ -65,10 +62,7 @@ export default class SelectedPieCitySupport extends Component {
         e.preventDefault()
         this.setState({
           param: e.target.attributes.name.value,
-          needUpdate: true,
-          options: {
-
-          }
+          needUpdate: true
         })
       }
 
@@ -87,13 +81,11 @@ export default class SelectedPieCitySupport extends Component {
       }
 
 
-
-
     render() {
         return (
         <div className="positive-charts">
           <div className='pos-pie-chart'>
-            <SelectionBar handleChange={this.handleChange} name={this.state.param} type='vaccine'/>
+            <SelectionBar handleChange={this.handleChange} name={this.state.param} type='parties'/>
             <Chart type="pie" series={this.state.series} options={this.state.options} className='positive-chart'/>
           </div>
         </div>
