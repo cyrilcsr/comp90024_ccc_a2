@@ -8,8 +8,8 @@ import '../css/styles.css'
 
 export default class VaccineLine extends Component {
     constructor(props) {
-        super(props);
-        // this.handleChange = this.handleChange.bind(this)
+        super(props)
+        this.handleChange = this.handleChange.bind(this)
         this.state = {
           param: 'Overall Tweet',
           needUpdate: false,
@@ -154,7 +154,7 @@ export default class VaccineLine extends Component {
     render() {
         return (
             <div>
-              <SelectionBar handleChange={this.handleChange} name={this.state.param}/>
+              <SelectionBar handleChange={this.handleChange} name={this.state.param} type='vaccine'/>
               <Chart options={this.state.options} series={this.state.series} type="line" height={500} width={600} />
             </div>
 

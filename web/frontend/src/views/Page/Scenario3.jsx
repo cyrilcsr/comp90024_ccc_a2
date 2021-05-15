@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Map from '../../components/PoliticalPartyMap'
+import PoliticalPartyMap from '../../components/PoliticalPartyMap'
 import SelectedPieCitySupport from '../../components/SelectedPieCitySupport'
 import VaccineLine from '../../components/VaccineLine'
 import SelectionBar from '../../components/SelectionBar'
@@ -24,14 +24,13 @@ export default class Scenario3 extends Component {
             <div class="parent">
                 <div class="div1"> <h3 className='scenario-title'>Political Party Support Rate & Vaccination Support Rate</h3> </div>
                 <div class="div2"> 
-                    <Map classname='election-map'/>      
+                    <PoliticalPartyMap className='election-map'/>      
                 </div>
-                <div class="div3">  
+                {/* <div className="div3">  
                     <SelectedPieCitySupport/> 
                      <div onClick={() => this.setState({ city: !this.state.line })}>
                     </div>
-
-                </div>
+                </div> */}
             </div>
             </div>
             

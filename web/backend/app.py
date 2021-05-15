@@ -1,3 +1,4 @@
+  
 from couchdb.client import Server
 from flask import Flask, json
 from flask import jsonify
@@ -12,8 +13,8 @@ CORS(app)
 server1 = Server('http://admin:couchdb@172.26.133.237:5984')
 server2 = Server('http://admin:couchdb@172.26.128.245:5984')
 branddb = server1['twitter_data']
-vaccine = server2['twitter_data']
 parties = server1['parties_data']
+vaccine = server2['twitter_data']
 
 def is_rural(city_name):
     return city_name not in ['Adelaide', 'Melbourne', 'Brisbane', 'Canberra', 'Perth', 'Sydney']
@@ -272,6 +273,7 @@ def political_party():
         data['geometry']['coordinates'] = coordinates
         data['properties']['mag'] = row.value
         data['properties']['group'] = row.key
+
         features.append(data)
 
     response = {
