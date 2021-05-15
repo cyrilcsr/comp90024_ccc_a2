@@ -44,16 +44,17 @@ export default class SelectedPieCitySupport extends Component {
 
 
     renderChart(){
-      const url = 'http://127.0.0.1:5000/political_party_per_area/'
+      var location = this.state.param === 'Rural Area' ? 'rural' : this.state.param
+      const url = 'http://127.0.0.1:5000/vaccine_trend/'
       axios
       .get(url, {
         param: {
-          "party": this.state.param
+          "location": location
         }
       })
       .then(res => {
         const data = res.data.data
-
+        
         })
       }
 
@@ -85,7 +86,7 @@ export default class SelectedPieCitySupport extends Component {
         return (
         <div className="positive-charts">
           <div className='pos-pie-chart'>
-            <SelectionBar handleChange={this.handleChange} name={this.state.param} type='parties'/>
+            <SelectionBar handleChange={this.handleChange} name={this.state.param} />
             <Chart type="pie" series={this.state.series} options={this.state.options} className='positive-chart'/>
           </div>
         </div>
