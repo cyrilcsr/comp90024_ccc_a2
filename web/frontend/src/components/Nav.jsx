@@ -12,14 +12,12 @@ export default function Nav() {
                 <Link to='/' className='nav-link'>Home</Link>
             </Button>
             <Button variant='outline-secondary' className='btn nav-btn'>
-                <Link to='/scenario-1' className='nav-link'>Scenario 1</Link>
+                <Link to='/scenario-1' className='nav-link'>Vaccine Brand</Link>
             </Button>
             <Button variant='outline-secondary' className='btn nav-btn'>
-                <Link to='/scenario-2' className='nav-link'>Scenario 2</Link>
+                <Link to='/scenario-2' className='nav-link'> Political Party</Link>
             </Button>
-            <Button variant='outline-secondary' className='btn nav-btn'>
-                <Link to='/scenario-3' className='nav-link'>Scenario 3</Link>
-            </Button>
+
         </div>
     )
 }

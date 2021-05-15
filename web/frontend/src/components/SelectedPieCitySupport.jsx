@@ -11,7 +11,7 @@ export default class SelectedPieCitySupport extends Component {
         this.handleChange = this.handleChange.bind(this)
 
         this.state = {
-            param: 'the_greens',
+            param: 'Sydney',
             series: [1, 1],
 
             options: {
@@ -24,7 +24,7 @@ export default class SelectedPieCitySupport extends Component {
               tooltip: {
 
               },
-              labels: ['Support', 'Neutral or Not Support'],
+              labels: ['Support', 'Others'],
               chart: {
                 width: 35,
                 type: 'pie'
@@ -86,7 +86,7 @@ export default class SelectedPieCitySupport extends Component {
         return (
         <div className="positive-charts">
           <div className='pos-pie-chart'>
-            <SelectionBar handleChange={this.handleChange} name={this.state.param} />
+            <SelectionBar handleChange={this.handleChange} name={ this.state.param } />
             <Chart type="pie" series={this.state.series} options={this.state.options} className='positive-chart'/>
           </div>
         </div>
