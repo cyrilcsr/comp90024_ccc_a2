@@ -46,7 +46,7 @@ const PoliticalPartyMap = () => {
           type: 'circle',
           source: 'party_support',
           'paint': {
-            'circle-radius': 3,
+            'circle-radius': 10,
             'circle-color': {
               property: 'mag',
               stops: [
@@ -69,19 +69,19 @@ const PoliticalPartyMap = () => {
           return `
           <div style="text-align: center;"><p style="font-size: 20px; margin-bottom: 0;">Party Support Percent</p></div>
           <div><strong>support raio </strong>: ${ele.mag}%</div>
+          <div><strong>State </strong>: ${ele.state}</div>
           `
         }
   
-        map.on('mousemove', 'party_support', (e) => {
+        map.on('mousemove', '2019_election', (e) => {
           map.getCanvas().style.cursor = 'pointer'
-
           popup.setLngLat(e.features[0].geometry.coordinates)
           .setHTML(constructHTML(e.features[0].properties))
           .addTo(map);
           
         })
 
-        map.on('mouseleave', 'party_support', (e) => {
+        map.on('mouseleave', '2019_election', (e) => {
           map.getCanvas().style.cursor = ''
         })
       })

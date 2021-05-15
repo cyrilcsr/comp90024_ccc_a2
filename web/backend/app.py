@@ -272,7 +272,7 @@ def political_party():
 
         data['geometry']['coordinates'] = coordinates
         data['properties']['mag'] = row.value
-        data['properties']['group'] = row.key
+        data['properties']['state'] = row.key
 
         features.append(data)
 
