@@ -8,7 +8,7 @@ import '../css/styles.css'
 
 const PoliticalPartyMap = () => {
   const [map, setMap] = useState(null);
-  const [party, setParty] = useState('the_greens')
+  const [party, setParty] = useState('liberal')
   const mapContainer = useRef();
   
   useEffect(() => {
@@ -39,9 +39,6 @@ const PoliticalPartyMap = () => {
         map.addSource('party_support', {
           type: 'geojson',
           data: geoData,
-          cluster: true,
-          clusterMaxZoom: 14, // Max zoom to cluster points on
-          clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
         });
 
         map.addLayer({
@@ -49,17 +46,44 @@ const PoliticalPartyMap = () => {
           type: 'circle',
           source: 'party_support',
           'paint': {
-            'circle-radius': 8,
-            'circle-color': '#223b53',
+            'circle-radius': 3,
+            'circle-color': {
+              property: 'mag',
+              stops: [
+              [0, '#f1f075'],
+              [80, '#e55e5e']
+              ]
+              },
+            'circle-opacity': 0.5,
             }
           });
+
+
+        // my cute tiny popup
+        var popup = new mapboxgl.Popup({
+          closeButton: false,
+          closeOnClick: false
+        });
+
+        function constructHTML(ele){
+          return `
+          <div style="text-align: center;"><p style="font-size: 20px; margin-bottom: 0;">Party Support Percent</p></div>
+          <div><strong>support raio </strong>: ${ele.mag}%</div>
+          `
+        }
   
-        map.on('mouseenter', '2019_election', function () {
-          map.getCanvas().style.cursor = 'pointer';
-        });
-        map.on('mouseleave', '2019_election', function () {
-          map.getCanvas().style.cursor = '';
-        });
+        map.on('mousemove', 'party_support', (e) => {
+          map.getCanvas().style.cursor = 'pointer'
+
+          popup.setLngLat(e.features[0].geometry.coordinates)
+          .setHTML(constructHTML(e.features[0].properties))
+          .addTo(map);
+          
+        })
+
+        map.on('mouseleave', 'party_support', (e) => {
+          map.getCanvas().style.cursor = ''
+        })
       })
     
     })

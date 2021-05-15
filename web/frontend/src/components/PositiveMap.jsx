@@ -81,7 +81,7 @@ const PositveMap = ({ onClick }) => {
 
         function constructHTML(ele){
           return `
-          <div style="text-align: center;"><p style="font-size: 20px; margin-bottom: 0;">${ele.name}</p></div>
+          <div style="text-align: center;"><p style="font-size: 18px; margin-bottom: 0;">${ele.name}</p></div>
           <div><strong>support raio </strong>: ${100 * (ele.pos_tweet / ele.total_tweet).toPrecision(2)}%</div>
           `
         }
