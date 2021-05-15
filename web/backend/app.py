@@ -256,31 +256,31 @@ def brand_stat():
     })
 
 @app.route('/political_party/')
-def political_party():
-    data = construct_geojson()
-    features = []
+def political_party():
+    features = []
 
-    param = request.args.get('party')
-    views = 'mapviews/data_' + param
+    param = request.args.get('party')
+    views = 'mapviews/data_' + param
 
-    for row in list(parties.view(views)):
+    for row in list(parties.view(views)):
+        data = construct_geojson()
+        arr = row.id[1:-2].split(',')
+        coordinates = []
+        for k in arr: coordinates.append(float(k))
+        coordinates.append(row.value)
 
-        arr = row.id[1:-2].split(',')
-        coordinates = []
-        for k in arr: coordinates.append(float(k))
+        data['geometry']['coordinates'] = coordinates
+        data['properties']['mag'] = row.value
+        data['properties']['group'] = row.key
 
-        data['geometry']['coordinates'] = coordinates
-        data['properties']['mag'] = row.value
-        features.append(data)
+        features.append(data)
 
-    response = {
-        'code': 200,
-        'msg': 'success',
-        'type': 'FeatureCollection',
-        'features': features
-    }
+    response = {
+        'type': 'FeatureCollection',
+        'features': features
+    }
 
-    return jsonify(response)
+    return jsonify(response)
 
 @app.route('/political_party_per_area/')
 def political_party_per_area():
