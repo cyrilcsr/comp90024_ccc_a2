@@ -21,14 +21,14 @@ with open('../../../../../grouped_election_data(1).json') as jsonfile:
         data = json.loads(json.dumps(row))
         coordinate = str(data['geometry']['coordinates'])
         property_dict = {i:j for i,j in data['properties'].items() if j != None}
-        doc = {'state': property_dict['state']}
-        pattern = '*_percent_group'
+        pattern = '*_percent'
+        doc = {}
         for item in property_dict:
             if fnmatch.fnmatch(item, pattern):
-                party_name = item.replace('_percent_group', '')
+                party_name = item.replace('_percent', '')
                 doc[party_name] = property_dict[item]
+            else: doc[item] = property_dict[item]
         result[coordinate] = doc
-
 
     print('start uploading data')
     for d in result:

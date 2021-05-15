@@ -19,6 +19,18 @@ def is_rural(city_name):
 def build_dic():
     return {'total_tweet':0, 'pos_tweet':0, 'neg_tweet':0, 'neutral_tweet':0}
 
+def construct_geojson():
+    return {
+        'type': 'Feature',
+        'properties': {
+            'id': '', 'mag': 0
+        },
+        'geometry': {
+            'type': 'Point', 
+            'coordinates': []
+        }
+    }
+
 
 @app.route('/num_tweet_city/')
 def num_tweet_city():
@@ -246,23 +258,27 @@ def brand_stat():
 
 @app.route('/political_party/')
 def political_party():
-    data = {}
+    data = construct_geojson()
+    features = []
+    
     param = request.args.get('party')
     views = 'mapviews/data_' + param
-    key = 0
+
     for row in list(parties.view(views)):
-        key += 1
 
         arr = row.id[1:-2].split(',')
         coordinates = []
         for k in arr: coordinates.append(float(k))
 
-        data[key] = {'coordinates': coordinates, param: row.value}
+        data['geometry']['coordinates'] = coordinates
+        data['properties']['mag'] = row.value
+        features.append(data)
 
     response = {
         'code': 200,
         'mag': 'success',
-        'data': data
+        'type': 'FeatureCollection',
+        'features': features
     }
 
     return jsonify(response)
@@ -271,7 +287,6 @@ def political_party():
 def political_party_per_area():
     param = request.args.get('state')
     data = {'state': param, 'the_greens': {}, 'the_nationals': {}, 'australian_labor_party': {}, 'liberal': {}}
-    
     for row in list(parties.view('mapviews/stats_the_greens', group=True)):
         if row.key[0] == param: data['the_greens'][row.key[1]] = row.value
     for row in list(parties.view('mapviews/stats_the_nationals', group=True)):
@@ -280,7 +295,7 @@ def political_party_per_area():
         if row.key[0] == param: data['australian_labor_party'][row.key[1]] = row.value
     for row in list(parties.view('mapviews/stats_liberal', group=True)):
         if row.key[0] == param: data['liberal'][row.key[1]] = row.value
-
+        
     data = {
         'code': 200,
         'msg': 'success',
