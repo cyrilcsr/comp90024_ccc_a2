@@ -4,6 +4,8 @@ from flask import jsonify
 from flask import request
 from flask_cors import CORS
 
+import uuid
+
 
 app = Flask(__name__)
 CORS(app)
@@ -20,16 +22,19 @@ def build_dic():
     return {'total_tweet':0, 'pos_tweet':0, 'neg_tweet':0, 'neutral_tweet':0}
 
 def construct_geojson():
-    return {
-        'type': 'Feature',
-        'properties': {
-            'id': '', 'mag': 0
-        },
-        'geometry': {
-            'type': 'Point', 
-            'coordinates': []
-        }
+
+    data = {
+        "type": "Feature", 
+        "properties": { 
+            "id": uuid.uuid4(), 
+            "mag": 0 
+        }, 
+        "geometry": { 
+            "type": "Point", 
+            "coordinates": [] 
+        } 
     }
+    return data
 
 
 @app.route('/num_tweet_city/')
@@ -103,12 +108,6 @@ def total_num_tweet():
         elif(row.key[1] == 0):  
             data[key]['neutral_tweet'] += row.value
             data['total']['neutral_tweet'] += row.value
-    
-    response = {
-        'code':200,
-        'msg': 'success',
-        'data': data
-    }
 
     return jsonify(data)
 
@@ -260,7 +259,7 @@ def brand_stat():
 def political_party():
     data = construct_geojson()
     features = []
-    
+
     param = request.args.get('party')
     views = 'mapviews/data_' + param
 
@@ -276,7 +275,7 @@ def political_party():
 
     response = {
         'code': 200,
-        'mag': 'success',
+        'msg': 'success',
         'type': 'FeatureCollection',
         'features': features
     }

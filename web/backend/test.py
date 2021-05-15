@@ -19,8 +19,8 @@ with open('../../../../../grouped_election_data(1).json') as jsonfile:
 
     for row in feature_list:
         data = json.loads(json.dumps(row))
-        coordinate = str(data['geometry']['coordinates'])
-        property_dict = {i:j for i,j in data['properties'].items() if j != None}
+        coordinate = str(data['geometry']['coordinates']) # _id has to be a string
+        property_dict = {i:j for i,j in data['properties'].items() if j != None} # take out null
         pattern = '*_percent'
         doc = {}
         for item in property_dict:
