@@ -12,8 +12,8 @@ CORS(app)
 server1 = Server('http://admin:couchdb@172.26.133.237:5984')
 server2 = Server('http://admin:couchdb@172.26.128.245:5984')
 branddb = server1['twitter_data']
-parties = server1['parties_data']
 vaccine = server2['twitter_data']
+parties = server1['parties_data']
 
 def is_rural(city_name):
     return city_name not in ['Adelaide', 'Melbourne', 'Brisbane', 'Canberra', 'Perth', 'Sydney']
@@ -257,25 +257,24 @@ def brand_stat():
 
 @app.route('/political_party/')
 def political_party():
-    data = construct_geojson()
     features = []
 
     param = request.args.get('party')
     views = 'mapviews/data_' + param
 
     for row in list(parties.view(views)):
-
+        data = construct_geojson()
         arr = row.id[1:-2].split(',')
         coordinates = []
         for k in arr: coordinates.append(float(k))
+        coordinates.append(row.value)
 
         data['geometry']['coordinates'] = coordinates
         data['properties']['mag'] = row.value
+        data['properties']['group'] = row.key
         features.append(data)
 
     response = {
-        'code': 200,
-        'msg': 'success',
         'type': 'FeatureCollection',
         'features': features
     }

@@ -15,19 +15,18 @@ import earthquake_data from "../data/earthquakes.geojson";
 const Map = () => {
   const [map, setMap] = useState(null);
   const mapContainer = useRef();
+  const [geoData, setGeoData] = useState({})
   
   useEffect(() => {
-    const url = 'http://127.0.0.1:5000/political_party_per_area/the_greens'
-    // let radius = 10
+    const url = 'http://127.0.0.1:5000/political_party_per_area/?party=the_greens'
+    const data = {}
+    axios
+    .get(url)
+    .then(res => {
+      setGeoData(res.data)
+    })
     mapboxgl.accessToken = 'pk.eyJ1IjoiamVhbnN4dCIsImEiOiJja2Y3anRnZzEwMzJpMnpsa29ldDExbnZ5In0.9VVP31HO-qw7t14WaWOZ6g';
     const initializeMap = ({ setMap, mapContainer }) => {
-    // const map = new mapboxgl.Map({
-    //   container: mapContainer.current,
-    //   style: "mapbox://styles/jeansxt/cko9nl9d81nsw17mpgbwn11ph", // stylesheet location
-    //   center: [150, -32],
-    //   zoom: 1
-    // });
-    // // map.addControl(new mapboxgl.NavigationControl(), 'top-right');
     var map = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/dark-v10',
@@ -48,7 +47,7 @@ const Map = () => {
       type: 'geojson',
       // Point to GeoJSON data. This example visualizes all M1.0+ earthquakes
       // from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
-      data: earthquake_data,
+      data: geoData,
       //https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson
       cluster: true,
       clusterMaxZoom: 14, // Max zoom to cluster points on
