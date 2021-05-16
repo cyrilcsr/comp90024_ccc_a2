@@ -83,7 +83,6 @@ export default class VaccineLine extends Component {
       }
 
       handleChange(e){
-        console.log(e.target.attributes)
         e.preventDefault()
         this.setState({
           param: e.target.attributes.name.value,
