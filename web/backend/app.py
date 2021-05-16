@@ -1,4 +1,3 @@
-  
 from couchdb.client import Server
 from flask import Flask, json
 from flask import jsonify
@@ -6,7 +5,6 @@ from flask import request
 from flask_cors import CORS
 
 import uuid
-
 
 app = Flask(__name__)
 CORS(app)
@@ -46,9 +44,12 @@ def num_tweet_city():
     for row in list(vaccine.view('mapviews/sentiment_distribution', group=True)):
         if(param == row.key[0]):
             data['total_tweet'] += row.value
-            if(row.key[1] > 0): data['pos_tweet'] += row.value
-            elif(row.key[1] < 0): data['neg_tweet'] += row.value
-            elif(row.key[1] == 0):  data['neutral_tweet'] += row.value
+            if(row.key[1] > 0): 
+                data['pos_tweet'] += row.value
+            elif(row.key[1] < 0): 
+                data['neg_tweet'] += row.value
+            elif(row.key[1] == 0):  
+                data['neutral_tweet'] += row.value
         
     response = {
         "code": 200, 
@@ -63,14 +64,21 @@ def num_tweet_city():
 def vaccine_trend():
     location = request.args.get('location')
     data = {}
+
     for row in list(vaccine.view('mapviews/posneg_vaccine_trend', group=True)):
         if(location == 'Overall Tweet' or location == row.key[2] or (location == 'rural' and is_rural(row.key[2]))):
-            if row.key[0] not in data: data[row.key[0]] = {'pos': 0, 'neg': 0, 'total': 0}
-            if(row.key[1] == 'pos'): data[row.key[0]]['pos'] = row.value
-            elif(row.key[1] == 'neg'): data[row.key[0]]['neg'] = row.value
+            if row.key[0] not in data: 
+                data[row.key[0]] = {'pos': 0, 'neg': 0, 'total': 0}
+
+            if(row.key[1] == 'pos'): 
+                data[row.key[0]]['pos'] = row.value
+            elif(row.key[1] == 'neg'): 
+                data[row.key[0]]['neg'] = row.value
+
             data[row.key[0]]['total'] = data[row.key[0]]['pos'] + data[row.key[0]]['neg']
     
     return jsonify(data)
+
 
 @app.route('/brand_trend/')
 def brand_trend():
@@ -78,9 +86,14 @@ def brand_trend():
     data = {}
     for row in list(branddb.view('mapviews/brand_trend', group=True)):
         if(brand == 'Overall Brands' or brand.lower() == row.key[2]):
-            if row.key[0] not in data: data[row.key[0]] = {'pos': 0, 'neg': 0, 'total': 0}
-            if(row.key[1] == 'pos'): data[row.key[0]]['pos'] = row.value
-            elif(row.key[1] == 'neg'): data[row.key[0]]['neg'] = row.value
+            if row.key[0] not in data: 
+                data[row.key[0]] = {'pos': 0, 'neg': 0, 'total': 0}
+
+            if(row.key[1] == 'pos'): 
+                data[row.key[0]]['pos'] = row.value
+            elif(row.key[1] == 'neg'): 
+                data[row.key[0]]['neg'] = row.value
+
             data[row.key[0]]['total'] = data[row.key[0]]['pos'] + data[row.key[0]]['neg']
     
     return jsonify(data)
@@ -100,6 +113,7 @@ def total_num_tweet():
         
         data[key]['total_tweet'] += row.value
         data['total']['total_tweet'] += row.value
+
         if(row.key[1] > 0): 
             data[key]['pos_tweet'] += row.value
             data['total']['pos_tweet'] += row.value
@@ -118,19 +132,28 @@ def positive_score():
     data['total'] = {'positive': 0, 'others': 0}
     total_count = 0
     for row in list(vaccine.view('mapviews/positive_score', group=True)):
-        if(is_rural(row.key)): key = 'RuralArea'
-        else: key = row.key
-        if key not in data: data[key] = {'positive': 0, 'others': 0}
+        if(is_rural(row.key)): 
+            key = 'RuralArea'
+        else: 
+            key = row.key
+
+        if key not in data: 
+            data[key] = {'positive': 0, 'others': 0}
+
         total_count += row.value
         data[key]['positive'] += row.value
     data['total']['positive'] = total_count
 
     for row in list(vaccine.view('mapviews/other_score', group=True)):
-        if(is_rural(row.key)): key = 'RuralArea'
-        else: key = row.key
-        if key not in data: data[key] = {'positive': 0, 'others': 0}
+        if(is_rural(row.key)): 
+            key = 'RuralArea'
+        else: 
+            key = row.key
+        if key not in data: 
+            data[key] = {'positive': 0, 'others': 0}
         total_count += row.value
         data[key]['others'] += row.value
+
     data['total']['others'] = total_count
 
     response = {
@@ -153,11 +176,14 @@ def sentiment_score():
             data[param]['sentiment_score'] += row.value
 
         elif param == 'total':
-            if (is_rural(row.key)): key = 'rural'
-            else: key = row.key
+            if (is_rural(row.key)): 
+                key = 'rural'
+            else: 
+                key = row.key
 
             if key not in data:
                 data[key] = {'sentiment_score': 0}
+                
             data[key]['sentiment_score'] += row.value
 
     reponse = {
@@ -222,7 +248,9 @@ def city_data():
         else:
             cities.append(row.key)
             counts[row.key] = row.value
+
     counts['Overall Tweet'] = total_score
+
     response = {
         "code": 200,
         "msg": 'success',
@@ -237,14 +265,21 @@ def brand_stat():
     data = {}
 
     for row in list(branddb.view('mapviews/brand_view', group=True)):
-        if row.key[0] not in data: data[row.key[0]] = []
+        if row.key[0] not in data: 
+            data[row.key[0]] = []
         pos_tweet, neg_tweet, neutral_tweet, total = 0, 0, 0, 0
-        if row.key[2] == 'pos': pos_tweet = row.value
-        elif row.key[2] == 'neg': neg_tweet = row.value
-        else: neutral_tweet = row.value
+        if row.key[2] == 'pos': 
+            pos_tweet = row.value
+        elif row.key[2] == 'neg': 
+            neg_tweet = row.value
+        else: 
+            neutral_tweet = row.value
+
         total = pos_tweet + neg_tweet + neutral_tweet
+
         stat_row = [row.key[1], total, pos_tweet, neg_tweet, neutral_tweet]
         data[row.key[0]].append(stat_row)
+
     for row in list(branddb.view('mapviews/brand_sentiment', group=True)):
         stats = data[row.key[0]]
         for stat in stats:
@@ -288,13 +323,17 @@ def political_party_per_area():
     param = request.args.get('state')
     data = {'state': param, 'the_greens': {}, 'the_nationals': {}, 'australian_labor_party': {}, 'liberal': {}}
     for row in list(parties.view('mapviews/stats_the_greens', group=True)):
-        if row.key[0] == param: data['the_greens'][row.key[1]] = row.value
+        if row.key[0] == param: 
+            data['the_greens'][row.key[1]] = row.value
     for row in list(parties.view('mapviews/stats_the_nationals', group=True)):
-        if row.key[0] == param: data['the_nationals'][row.key[1]] = row.value
+        if row.key[0] == param: 
+            data['the_nationals'][row.key[1]] = row.value
     for row in list(parties.view('mapviews/stats_australian_labor_party', group=True)):
-        if row.key[0] == param: data['australian_labor_party'][row.key[1]] = row.value
+        if row.key[0] == param: 
+            data['australian_labor_party'][row.key[1]] = row.value
     for row in list(parties.view('mapviews/stats_liberal', group=True)):
-        if row.key[0] == param: data['liberal'][row.key[1]] = row.value
+        if row.key[0] == param: 
+            data['liberal'][row.key[1]] = row.value
         
     data = {
         'code': 200,
