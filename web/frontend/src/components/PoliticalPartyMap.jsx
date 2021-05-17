@@ -18,8 +18,9 @@ const PoliticalPartyMap = () => {
       const map = new mapboxgl.Map({
         container: mapContainer.current,
         style: "mapbox://styles/jeansxt/cko9nl9d81nsw17mpgbwn11ph", // stylesheet location
-        center: [150, -32],
-        zoom: 3.3
+        // center: [150, -32],
+        center: [135.2, -33],
+        zoom: 3.1
       })
 
       map.on("load",function () {
@@ -67,7 +68,7 @@ const PoliticalPartyMap = () => {
         type: 'circle',
         source: 'party_support',
         'paint': {
-          'circle-radius': 6,
+          'circle-radius': 3,
           'circle-color': {
             property: 'mag',
             stops: [

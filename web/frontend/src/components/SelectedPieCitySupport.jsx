@@ -86,7 +86,7 @@ export default class SelectedPieCitySupport extends Component {
         return (
         <div className="positive-charts">
           <div className='pos-pie-chart'>
-            <SelectionBar handleChange={this.handleChange} name={ this.state.param } />
+            <SelectionBar handleChange={this.handleChange} name={ this.state.param } type='vaccine'/>
             <Chart type="pie" series={this.state.series} options={this.state.options} className='positive-chart'/>
           </div>
         </div>

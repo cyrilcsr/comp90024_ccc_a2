@@ -23,14 +23,19 @@ export default class Scenario3 extends Component {
                 <Nav />
             <div class="parent">
                 <div class="div1"> <h3 className='scenario-title'>Political Party Support Rate & Vaccination Support Rate</h3> </div>
-                <div class="div2"> 
+                {/*<div class="div2"> */}
                     <PoliticalPartyMap className='election-map'/>      
-                </div>
+                {/*</div>*/}
                 {/* <div className="div3">  
                     <SelectedPieCitySupport/> 
                      <div onClick={() => this.setState({ city: !this.state.line })}>
                     </div>
                 </div> */}
+                 <div className="div3">  
+                    <SelectedPieCitySupport/> 
+                     <div onClick={() => this.setState({ city: !this.state.line })}>
+                    </div>
+                </div>
             </div>
             </div>
             
