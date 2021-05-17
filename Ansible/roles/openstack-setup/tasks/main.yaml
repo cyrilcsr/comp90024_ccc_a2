@@ -1,0 +1,2 @@
+- name: Setup system proxy
+  ansible.builtin.script: ../scripts/setup_system_proxy.sh
