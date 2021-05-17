@@ -1,2 +1,7 @@
-- name: Setup system proxy
-  ansible.builtin.script: ../scripts/setup_system_proxy.sh
+# - name: Script execution test
+#   become: yes
+#   ansible.builtin.script: /home/shirui/Desktop/comp90024_ccc_a2/Ansible/scripts/test.sh #--host 172.26.132.124
+- name: Wait for connection
+  ansible.builtin.script: "/home/shirui/Desktop/comp90024_ccc_a2/Ansible/scripts/test.sh --host {{ item.openstack.public_v4 }}"
+  loop: '{{ os_instance.results }}'
+  # when: item.openstack is defined

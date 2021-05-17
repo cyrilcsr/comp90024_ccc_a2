@@ -3,9 +3,9 @@ availability_zone: melbourne-qh2-uom
 
 # Volume
 volumes:
-  - vol_name: database-vol-1
+  - vol_name: database-voltest-1
     vol_size: 30
-  - vol_name: database-vol-2
+  - vol_name: database-voltest-2
     vol_size: 30
   # - vol_name: database-vol-2-1
   #   vol_size: 30
@@ -52,10 +52,10 @@ security_groups:
     remote_ip_prefix: 0.0.0.0/0
 # Instance
 instances:
-  - name: database-1
-    volumes: ['database-vol-1']
-  - name: database-2
-    volumes: ['database-vol-2']
+  - name: testdatabase1
+    volumes: ['database-voltest-1']
+  - name: testdatabase2
+    volumes: ['database-voltest-2']
     #volumes: ['database-vol-2', 'demo-vol-2-2']
 
 instance_image: f8b79936-6616-4a22-b55d-0d0a1d27bceb
