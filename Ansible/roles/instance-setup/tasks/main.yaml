@@ -1,0 +1,103 @@
+# - name: Set system proxy
+#   become: yes
+#   become_user: root
+#   ansible.builtin.script: "/home/shirui/Desktop/comp90024_ccc_a2/Ansible/scripts/setup_system_proxy.sh --host {{ item.openstack.public_v4 }}"
+#   loop: '{{ os_instance.results }}'
+
+# - name: Save IP address
+#   ansible.builtin.command: "echo {{ item.openstack.public_v4 }} >> /home/shirui/Desktop/comp90024_ccc_a2/Ansible/config/ip.txt"  
+#   loop: '{{ os_instance.results }}'
+
+
+# - name: Set system proxy
+#   become: yes
+#   # become_user: "ubuntu"
+#   ansible.builtin.script: "/home/shirui/Desktop/comp90024_ccc_a2/Ansible/scripts/setup_system_proxy.sh --host {{ instance_ips }}"
+#   loop: '{{ instance_ips }}'
+
+# - name: Save IP address
+#   # ansible.builtin.command: "echo 1.2.3 >> /home/shirui/Desktop/comp90024_ccc_a2/Ansible/config/ip.txt" 
+#   ansible.builtin.copy:
+#     content: "{{ instance_ips }}" 
+#     dest: /home/shirui/Desktop/comp90024_ccc_a2/Ansible/config/ip.txt 
+#   loop: '{{ instance_ips }}'
+
+- name: Add proxy in /etc/environment
+  become: yes
+  blockinfile:
+    path: /etc/environment
+    block: |
+      http_proxy=http://wwwproxy.unimelb.edu.au:8000/
+      https_proxy=http://wwwproxy.unimelb.edu.au:8000/
+      no_proxy="localhost,127.0.0.1,localhostaddress,172.16.0.0/12,.melbourne.rc.nectar.org.au,.storage.unimelb.edu.au,.cloud.unimelb.edu.au"
+      HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000/
+      HTTPS_PROXY=http://wwwproxy.unimelb.edu.au:8000/
+
+# sudo apt update
+- name: apt update
+  become: yes
+  apt:
+    update_cache: yes 
+    force_apt_get: yes
+
+#sudo apt install docker-io
+- name: Install docker
+  become: yes
+  apt:
+    name: docker.io
+    state: latest
+
+#sudo apt install python3-docker
+- name: Install python3-docker
+  become: yes
+  apt:
+    name: python3-docker
+    state: latest
+
+- name: Make sure docker is running
+  ansible.builtin.systemd:
+    state: started
+    name: docker
+
+- name: Create a directory to save docker proxy configuration
+  become: yes
+  ansible.builtin.file:
+    path: /etc/systemd/system/docker.service.d/http-proxy.conf
+    state: touch
+    mode: '0755'
+
+- name: Add proxy in http-proxy.conf
+  become: yes
+  blockinfile:
+    path: /etc/systemd/system/docker.service.d/http-proxy.conf
+    block: |
+      [Service]
+      Environment="HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000"
+      Environment="HTTPS_PROXY=http://wwwproxy.unimelb.edu.au:8000"
+      Environment="http_proxy=http://wwwproxy.unimelb.edu.au:8000"
+      Environment="https_proxy=http://wwwproxy.unimelb.edu.au:8000"
+      Environment="no_proxy=localhost,127.0.0.1,localaddress,172.16.0.0/12,.melbourne.rc.nectar.org.au,.storage.unimelb.edu.au,.cloud.unimelb.edu.au"
+
+- name: Issue deamon_reloaded and restart docker to pick up config change
+  become: yes
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: docker
+
+- name: Add the user 'ubuntu' to group 'docker'
+  become: yes
+  ansible.builtin.user:
+    name: ubuntu
+    group: docker
+    append: yes
+
+- name: reset ssh connection to allow user changes to affect ansible user
+  ansible.builtin.meta:
+    reset_connection
+
+- name: Create a hello-world container for testing
+  community.docker.docker_container:
+    name: docker
+    image: hello-world
+    state: started

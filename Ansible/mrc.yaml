@@ -22,4 +22,4 @@
   gather_facts: true
 
   roles:
-    - role: openstack-setup
+    - role: instance-setup
