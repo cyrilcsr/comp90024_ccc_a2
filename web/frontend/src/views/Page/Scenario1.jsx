@@ -1,12 +1,8 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 
 import Nav from '../../components/Nav'
 import BrandLine from '../../components/BrandLine'
 import VaccineLine from '../../components/VaccineLine'
-import BrushLine from '../../components/BrushLine'
-import BubbleChart from '../../components/BubbleChart'
-import SelectionBar from '../../components/SelectionBar'
 import '../css/Scenarios.css'
 
 export default class Scenario1 extends Component {
@@ -19,9 +15,6 @@ export default class Scenario1 extends Component {
     }
 
     render() {
-        var style = {
-            color: 'white'
-        }
         return (
             <div className='scenario'>
                  <Nav />

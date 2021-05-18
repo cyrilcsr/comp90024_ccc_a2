@@ -66,7 +66,11 @@ def vaccine_trend():
     data = {}
 
     for row in list(vaccine.view('mapviews/posneg_vaccine_trend', group=True)):
-        if(location == 'Overall Tweet' or location == row.key[2] or (location == 'rural' and is_rural(row.key[2]))):
+        
+        if(location == 'Overall Tweet' or 
+           location == row.key[2] or 
+           (location == 'rural' and is_rural(row.key[2]))):
+
             if row.key[0] not in data: 
                 data[row.key[0]] = {'pos': 0, 'neg': 0, 'total': 0}
 
@@ -124,6 +128,23 @@ def total_num_tweet():
             data[key]['neutral_tweet'] += row.value
             data['total']['neutral_tweet'] += row.value
 
+    return jsonify(data)
+
+@app.route('/positive_per_city/')
+def positive_per_city():
+    data = {'positive': 0, 'others': 0}
+    city = request.args.get('city')
+    for row in list(vaccine.view('mapviews/positive_score', group=True)):
+        if((city == 'RuralArea' and is_rural(row.key)) 
+            or city == row.key 
+            or city == 'Overall Tweet'):
+            data['positive'] += row.value
+    for row in list(vaccine.view('mapviews/other_score', group=True)):
+        if((city == 'RuralArea' and is_rural(row.key)) 
+            or city == row.key 
+            or city == 'Overall Tweet'):
+            data['others'] += row.value
+     
     return jsonify(data)
 
 @app.route('/positive_score/')
@@ -202,7 +223,9 @@ def sentiment_distribution():
     data = {}
 
     for row in list(vaccine.view('mapviews/sentiment_distribution', group=True)):
-        if(param =='total' or (param == 'rural' and is_rural(row.key[0])) or row.key[0] == param):
+        if(param =='total' or 
+        (param == 'rural' and is_rural(row.key[0])) or 
+        row.key[0] == param):
             sentiment_score = str(row.key[1])
             result_dict[sentiment_score] = row.value
 

@@ -31,7 +31,7 @@ export default function SelectionBar({ handleChange,  name, type }) {
         <div className='selection'>
             <Dropdown>
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
-                    {name? name : type === 'vaccine' ? 'Overall Tweet' : type === 'parties' ? 'Green' : 'Overall Brands'}
+                    {name ? name : type === 'vaccine' ? 'Overall Tweet' : type === 'parties' ? 'Green' : 'Overall Brands'}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                     {type === 'parties' ? 

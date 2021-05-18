@@ -10,6 +10,7 @@ import '../css/styles.css'
 const PoliticalPartyMap = () => {
   const [map, setMap] = useState();
   const [party, setParty] = useState('liberal')
+  const [update, setUpdate] = useState(false)
   const mapContainer = useRef();
   
   useEffect(() => {
@@ -35,10 +36,17 @@ const PoliticalPartyMap = () => {
 
 })
 
+useEffect(() => {
+  if(update){
+    renderMap(map, party)
+    setUpdate(false)
+  }
+}, [update])
+
   function handleChange(e){
     e.preventDefault()
     setParty(e.target.attributes.name.value)
-    renderMap(map, party)
+    setUpdate(true)
   }
 
   function renderMap(map, party){
