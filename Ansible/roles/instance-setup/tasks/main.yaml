@@ -1,27 +1,4 @@
-# - name: Set system proxy
-#   become: yes
-#   become_user: root
-#   ansible.builtin.script: "/home/shirui/Desktop/comp90024_ccc_a2/Ansible/scripts/setup_system_proxy.sh --host {{ item.openstack.public_v4 }}"
-#   loop: '{{ os_instance.results }}'
-
-# - name: Save IP address
-#   ansible.builtin.command: "echo {{ item.openstack.public_v4 }} >> /home/shirui/Desktop/comp90024_ccc_a2/Ansible/config/ip.txt"  
-#   loop: '{{ os_instance.results }}'
-
-
-# - name: Set system proxy
-#   become: yes
-#   # become_user: "ubuntu"
-#   ansible.builtin.script: "/home/shirui/Desktop/comp90024_ccc_a2/Ansible/scripts/setup_system_proxy.sh --host {{ instance_ips }}"
-#   loop: '{{ instance_ips }}'
-
-# - name: Save IP address
-#   # ansible.builtin.command: "echo 1.2.3 >> /home/shirui/Desktop/comp90024_ccc_a2/Ansible/config/ip.txt" 
-#   ansible.builtin.copy:
-#     content: "{{ instance_ips }}" 
-#     dest: /home/shirui/Desktop/comp90024_ccc_a2/Ansible/config/ip.txt 
-#   loop: '{{ instance_ips }}'
-
+---
 - name: Add proxy in /etc/environment
   become: yes
   blockinfile:
@@ -54,10 +31,41 @@
     name: python3-docker
     state: latest
 
+# Start mounting volumn
+- name: Create a /data directory to mount volumn device
+  become: yes
+  ansible.builtin.file:
+    path: '{{ mounting_point }}'
+    state: directory
+    mode: '0755'
+
+- name: Create a ext4 filesystem on /dev/vdb
+  become: yes
+  community.general.filesystem:
+    fstype: ext4
+    dev: /dev/vdb
+    # opts: -cc
+
+- name: Mount up device by label
+  become: yes
+  ansible.posix.mount:
+    path: '{{ mounting_point }}'
+    src: /dev/vdb
+    fstype: ext4
+    state: mounted
+# End mounting volumn
+
 - name: Make sure docker is running
   ansible.builtin.systemd:
     state: started
     name: docker
+
+- name: Create a directory to save docker proxy configuration
+  become: yes
+  ansible.builtin.file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+    mode: '0755'
 
 - name: Create a directory to save docker proxy configuration
   become: yes
@@ -88,7 +96,7 @@
 - name: Add the user 'ubuntu' to group 'docker'
   become: yes
   ansible.builtin.user:
-    name: ubuntu
+    name: '{{ remote_username }}'
     group: docker
     append: yes
 
