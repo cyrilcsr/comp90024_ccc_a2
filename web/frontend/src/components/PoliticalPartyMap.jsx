@@ -19,9 +19,8 @@ const PoliticalPartyMap = () => {
       const map = new mapboxgl.Map({
         container: mapContainer.current,
         style: "mapbox://styles/jeansxt/cko9nl9d81nsw17mpgbwn11ph", // stylesheet location
-        // center: [150, -32],
-        center: [135.2, -33],
-        zoom: 3.1
+        center: [150, -28],
+        zoom: 2.8
       })
 
       map.on("load",function () {
