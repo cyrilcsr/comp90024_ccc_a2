@@ -1,7 +1,34 @@
-# - name: Script execution test
+# - name: Set system proxy
 #   become: yes
-#   ansible.builtin.script: /home/shirui/Desktop/comp90024_ccc_a2/Ansible/scripts/test.sh #--host 172.26.132.124
-- name: Wait for connection
-  ansible.builtin.script: "/home/shirui/Desktop/comp90024_ccc_a2/Ansible/scripts/test.sh --host {{ item.openstack.public_v4 }}"
-  loop: '{{ os_instance.results }}'
-  # when: item.openstack is defined
+#   become_user: root
+#   ansible.builtin.script: "/home/shirui/Desktop/comp90024_ccc_a2/Ansible/scripts/setup_system_proxy.sh --host {{ item.openstack.public_v4 }}"
+#   loop: '{{ os_instance.results }}'
+
+# - name: Save IP address
+#   ansible.builtin.command: "echo {{ item.openstack.public_v4 }} >> /home/shirui/Desktop/comp90024_ccc_a2/Ansible/config/ip.txt"  
+#   loop: '{{ os_instance.results }}'
+
+
+# - name: Set system proxy
+#   become: yes
+#   # become_user: "ubuntu"
+#   ansible.builtin.script: "/home/shirui/Desktop/comp90024_ccc_a2/Ansible/scripts/setup_system_proxy.sh --host {{ instance_ips }}"
+#   loop: '{{ instance_ips }}'
+
+# - name: Save IP address
+#   # ansible.builtin.command: "echo 1.2.3 >> /home/shirui/Desktop/comp90024_ccc_a2/Ansible/config/ip.txt" 
+#   ansible.builtin.copy:
+#     content: "{{ instance_ips }}" 
+#     dest: /home/shirui/Desktop/comp90024_ccc_a2/Ansible/config/ip.txt 
+#   loop: '{{ instance_ips }}'
+
+- name: Add proxy in /etc/environment
+  become: yes
+  blockinfile:
+    path: /etc/environment
+    block: |
+      http_proxy=http://wwwproxy.unimelb.edu.au:8000/
+      https_proxy=http://wwwproxy.unimelb.edu.au:8000/
+      no_proxy="localhost,127.0.0.1,localhostaddress,172.16.0.0/12,.melbourne.rc.nectar.org.au,.storage.unimelb.edu.au,.cloud.unimelb.edu.au"
+      HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000/
+      HTTPS_PROXY=http://wwwproxy.unimelb.edu.au:8000/

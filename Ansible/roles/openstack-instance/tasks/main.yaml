@@ -29,3 +29,16 @@
     search_regex: OpenSSH
   loop: '{{ os_instance.results }}'
   when: item.openstack is defined
+
+- name: Add host
+  add_host:
+    name: '{{ item.openstack.public_v4 }}'
+    groups: instances
+  loop: '{{ os_instance.results }}'
+  when: item.openstack is defined
+
+# - name: create file
+#   become: yes
+#   template:
+#     remote_src: ansible-hosts.j2
+#     dest: "{{ instance_ip_file }}"

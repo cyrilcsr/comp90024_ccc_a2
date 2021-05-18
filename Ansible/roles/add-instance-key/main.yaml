@@ -1,0 +1,6 @@
+---
+- name: add NectarGroupKey
+  copy:
+    src: "config/general.pem"
+    dest: ~/.ssh/general
+    mode: 400
