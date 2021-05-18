@@ -66,7 +66,7 @@ instance_flavor: uom.mse.1c4g
 # instance_ips: ['172.26.133.42', '172.26.129.211']
 
 # File Path
-instance_ip_file: /config/instance_ips.config
+instance_ip_file: config/instance_ips.ini
 
 # Instance login user
 remote_username: ubuntu

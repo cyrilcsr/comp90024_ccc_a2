@@ -1,4 +1,17 @@
 ---
+- name: Create a directory to save configuration files
+  become: yes
+  ansible.builtin.file:
+    path: /home/ubuntu/config
+    state: directory
+    mode: '777'
+
+- name: Copy instance IP file to all instance
+  become: yes
+  ansible.builtin.copy:
+    src: "{{ instance_ip_file }}"
+    dest: /home/ubuntu/config/instance_ips.ini
+
 - name: Add proxy in /etc/environment
   become: yes
   blockinfile:

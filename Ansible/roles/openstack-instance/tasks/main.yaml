@@ -37,8 +37,7 @@
   loop: '{{ os_instance.results }}'
   when: item.openstack is defined
 
-# - name: create file
-#   become: yes
-#   template:
-#     remote_src: ansible-hosts.j2
-#     dest: "{{ instance_ip_file }}"
+- name: create file
+  template:
+    src: hosts-list.j2
+    dest: "{{ instance_ip_file }}"
