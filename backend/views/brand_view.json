@@ -1,6 +1,5 @@
 {
     "_id": "_design/mapviews",
-    "_rev": "24-fc2db364dd593dd642c2e45240d501c7",
     "language": "javascript",
     "views": {
       "brand_trend": {

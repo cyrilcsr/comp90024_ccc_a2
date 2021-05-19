@@ -1,6 +1,5 @@
 {
   "_id": "_design/mapviews",
-  "_rev": "6-541c6f11b8cc89ad1ecb8056efc24b33",
   "language": "javascript",
   "views": {
     "data_the_greens": {

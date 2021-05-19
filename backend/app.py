@@ -50,10 +50,15 @@ with open('./grouped_election_data.json') as jsonfile:
     for d in result:
         if d not in db: db[d] = result[d]
 
+if 'twitter_data' in server1:
+    branddb = server1['twitter_data']
+else: branddb = server1.create('twitter_data')
 
-branddb = server1['twitter_data']
+if 'twitter_data' in server2:
+    vaccine = server2['twitter_data']
+else: vaccine = server2.create('twitter_data')
+
 parties = server1['parties_data']
-vaccine = server2['twitter_data']
 
 # apply mapreduce functions to couchdb
 with open('./views/vaccine.json', 'r') as f:
