@@ -7,6 +7,8 @@ volumes:
     vol_size: 30
   - vol_name: database-vol-2
     vol_size: 30
+  - vol_name: webserver_vol
+    vol_size: 30
   # - vol_name: database-vol-2-1
   #   vol_size: 30
   # - vol_name: database-vol-2-2
@@ -56,7 +58,8 @@ instances:
     volumes: ['database-vol-1']
   - name: database2
     volumes: ['database-vol-2']
-    #volumes: ['database-vol-2', 'demo-vol-2-2']
+  - name: webserver
+    volumes: ['webserver_vol']
 
 instance_image: f8b79936-6616-4a22-b55d-0d0a1d27bceb
 instance_key_name: general
@@ -72,4 +75,4 @@ instance_ip_file: config/instance_ips.ini
 remote_username: ubuntu
 
 # mount point
-mounting_point: /data
+mounting_point: /home/ubuntu/data

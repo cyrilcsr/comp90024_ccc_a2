@@ -44,6 +44,13 @@
   loop: '{{ os_instance.results }}'
   when: item.openstack.name is match("database.*")
 
+- name: Add host - Webserver instance
+  add_host:
+    name: '{{ item.openstack.public_v4 }}'
+    groups: webserver
+  loop: '{{ os_instance.results }}'
+  when: item.openstack.name is match("webserver")
+
 - name: create file
   template:
     src: hosts-list.j2
