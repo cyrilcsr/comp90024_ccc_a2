@@ -30,12 +30,19 @@
   loop: '{{ os_instance.results }}'
   when: item.openstack is defined
 
-- name: Add host
+- name: Add host - All instance
   add_host:
     name: '{{ item.openstack.public_v4 }}'
     groups: instances
   loop: '{{ os_instance.results }}'
   when: item.openstack is defined
+
+- name: Add host - Database instance
+  add_host:
+    name: '{{ item.openstack.public_v4 }}'
+    groups: database
+  loop: '{{ os_instance.results }}'
+  when: item.openstack.name is match("database.*")
 
 - name: create file
   template:
