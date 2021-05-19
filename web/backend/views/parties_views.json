@@ -1,35 +1,35 @@
 {
-    "_id": "_design/mapviews",
-    "_rev": "5-015060477db42e386774fcc0dacf132c",
-    "language": "javascript",
-    "views": {
-      "data_the_greens": {
-        "map": "function(doc){ if(doc.the_greens) { emit([doc.key, doc.the_greens_percent_group], doc.the_greens) } }"
-      },
-      "data_the_nationals": {
-        "map": "function(doc){ if(doc.the_nationals) { emit([doc.key, doc.the_nationals_percent_group], doc.the_nationals) } }"
-      },
-      "data_liberal": {
-        "map": "function(doc){ if(doc.liberal) { emit([doc.key, doc.liberal_percent_group], doc.liberal) } }"
-      },
-      "data_australian_labor_party": {
-        "map": "function(doc){ if(doc.australian_labor_party) { emit([doc.key,doc.australian_labor_party_percent_group], doc.australian_labor_party) } }"
-      },
-      "stats_the_greens": {
-        "map": "function(doc){ if(doc.the_greens_percent_group) { emit([doc.state, doc.the_greens_percent_group], 1) } }",
-        "reduce": "_count"
-      },
-      "stats_the_nationals": {
-        "map": "function(doc){ if(doc.the_nationals_percent_group) { emit([doc.state, doc.the_nationals_percent_group], 1) } }",
-        "reduce": "_count"
-      },
-      "stats_liberal": {
-        "map": "function(doc){ if(doc.liberal_percent_group) { emit([doc.state, doc.liberal_percent_group], 1) } }",
-        "reduce": "_count"
-      },
-      "stats_australian_labor_party": {
-        "map": "function(doc){ if(doc.australian_labor_party_percent_group) { emit([doc.state, doc.australian_labor_party_percent_group], 1) } }",
-        "reduce": "_count"
-      }
+  "_id": "_design/mapviews",
+  "_rev": "6-541c6f11b8cc89ad1ecb8056efc24b33",
+  "language": "javascript",
+  "views": {
+    "data_the_greens": {
+      "map": "function(doc){ if(doc.the_greens) { emit(doc.state, doc.the_greens) } }"
+    },
+    "data_the_nationals": {
+      "map": "function(doc){ if(doc.the_nationals) { emit(doc.state, doc.the_nationals) } }"
+    },
+    "data_liberal": {
+      "map": "function(doc){ if(doc.liberal) { emit( doc.state, doc.liberal) } }"
+    },
+    "data_australian_labor_party": {
+      "map": "function(doc){ if(doc.australian_labor_party) { emit(doc.state, doc.australian_labor_party) } }"
+    },
+    "stats_the_greens": {
+      "map": "function(doc){ if(doc.the_greens_percent_group) { emit([doc.state, doc.the_greens_percent_group], 1) } }",
+      "reduce": "_count"
+    },
+    "stats_the_nationals": {
+      "map": "function(doc){ if(doc.the_nationals_percent_group) { emit([doc.state, doc.the_nationals_percent_group], 1) } }",
+      "reduce": "_count"
+    },
+    "stats_liberal": {
+      "map": "function(doc){ if(doc.liberal_percent_group) { emit([doc.state, doc.liberal_percent_group], 1) } }",
+      "reduce": "_count"
+    },
+    "stats_australian_labor_party": {
+      "map": "function(doc){ if(doc.australian_labor_party_percent_group) { emit([doc.state, doc.australian_labor_party_percent_group], 1) } }",
+      "reduce": "_count"
     }
   }
+}

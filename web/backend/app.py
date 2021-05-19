@@ -1,9 +1,8 @@
-from couchdb.client import Server
-from flask import Flask, json
+from flask import Flask
 from flask import jsonify
 from flask import request
 from flask_cors import CORS
-
+from couchdb.client import Server
 import uuid
 
 app = Flask(__name__)

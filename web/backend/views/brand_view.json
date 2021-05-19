@@ -1,0 +1,23 @@
+{
+    "_id": "_design/mapviews",
+    "_rev": "24-fc2db364dd593dd642c2e45240d501c7",
+    "language": "javascript",
+    "views": {
+      "brand_trend": {
+        "map": "function(doc){ var flag = doc.sentiment_score >= 0 ? 'pos' : 'neg'; emit([doc.created_at, flag, doc.vaccine_brand], doc.sentiment_score) }",
+        "reduce": "_count"
+      },
+      "brand_count": {
+        "map": "function(doc){ if(doc.vaccine_brand){ emit(doc.vaccine_brand, 1) } }",
+        "reduce": "_count"
+      },
+      "brand_sentiment": {
+        "map": "function(doc) { if(doc.vaccine_brand) { emit([doc.vaccine_brand, doc.created_at], doc.sentiment_score) } }",
+        "reduce": "_sum"
+      },
+      "brand_view": {
+        "map": "function(doc) { var flag = doc.sentiment_score > 0 ? 'pos' : doc.sentiment_score < 0 ? 'neg' : 'neutral'; if(doc.vaccine_brand) { emit([doc.vaccine_brand, doc.created_at, flag], 1) } }",
+        "reduce": "_count"
+      }
+    }
+  }
