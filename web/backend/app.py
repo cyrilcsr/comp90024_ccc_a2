@@ -214,7 +214,6 @@ def sentiment_score():
 
     return jsonify(reponse)
 
-
 @app.route('/sentiment_distribution/')
 def sentiment_distribution():
     param = request.args.get('city')

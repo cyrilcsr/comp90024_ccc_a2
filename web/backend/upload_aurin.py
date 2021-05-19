@@ -2,9 +2,8 @@ from couchdb.client import Server
 import json
 import fnmatch
 
-print('starting')
+
 server = Server('http://admin:couchdb@172.26.133.237:5984')
-print('connected')
 
 if not 'parties_data' in server:
     db = server.create('parties_data')
