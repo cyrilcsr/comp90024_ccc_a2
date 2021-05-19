@@ -7,8 +7,6 @@ import json
 import uuid
 import fnmatch
 
-app = Flask(__name__)
-CORS(app)
 server1 = Server('http://admin:couchdb@172.26.133.237:5984')
 server2 = Server('http://admin:couchdb@172.26.128.245:5984')
 
@@ -17,7 +15,7 @@ if not 'parties_data' in server1:
     db = server1.create('parties_data')
 else: db = server1['parties_data']
 
-with open('./grouped_election_data(1).json') as jsonfile:
+with open('./grouped_election_data.json') as jsonfile:
     data = json.load(jsonfile)
     jsonfile.close()
     result = {}
@@ -50,14 +48,15 @@ vaccine = server2['twitter_data']
 with open('./views/vaccine.json', 'r') as f:
     vaccine.save(json.load(f))
     f.close()
-with open('./views/brand_view.json') as f:
+with open('./views/brand_view.json', 'r') as f:
     branddb.save(json.load(f))
     f.close()
-with open('./views/parties_views.json') as f:
+with open('./views/parties_views.json', 'r') as f:
     parties.save(json.load(f))
     f.close()
 
-
+app = Flask(__name__)
+CORS(app)
 
 def is_rural(city_name):
     return city_name not in ['Adelaide', 'Melbourne', 'Brisbane', 'Canberra', 'Perth', 'Sydney']
