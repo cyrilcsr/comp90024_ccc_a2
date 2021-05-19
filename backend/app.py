@@ -6,9 +6,20 @@ from flask_cors import CORS
 import json
 import uuid
 import fnmatch
+import configparser
 
-server1 = Server('http://admin:couchdb@172.26.133.237:5984')
-server2 = Server('http://admin:couchdb@172.26.128.245:5984')
+# read .ini file to get ips for db
+IN_FILE = '../../config/instance_ips.ini'
+config = configparser.ConfigParser(allow_no_value=True)
+config.read(IN_FILE)
+(ip1, _),(ip2, _) = config.items('database')
+
+server1_url = 'http://admin:couchdb@' + ip1 + ':5984'
+server2_url = 'http://admin:couchdb@' + ip2 + ':5984'
+
+server1 = Server(server1_url)
+server2 = Server(server2_url)
+
 
 # Upload aurin data to couchdb
 if not 'parties_data' in server1:
