@@ -1,17 +1,63 @@
 from flask import Flask
 from flask import jsonify
 from flask import request
-from flask_cors import CORS
 from couchdb.client import Server
+from flask_cors import CORS
+import json
 import uuid
+import fnmatch
 
 app = Flask(__name__)
 CORS(app)
 server1 = Server('http://admin:couchdb@172.26.133.237:5984')
 server2 = Server('http://admin:couchdb@172.26.128.245:5984')
+
+# Upload aurin data to couchdb
+if not 'parties_data' in server1:
+    db = server1.create('parties_data')
+else: db = server1['parties_data']
+
+with open('../../../../../grouped_election_data(1).json') as jsonfile:
+    data = json.load(jsonfile)
+    jsonfile.close()
+    result = {}
+
+    feature_list = data['features']
+
+    for row in feature_list:
+        data = json.loads(json.dumps(row))
+        coordinate = str(data['geometry']['coordinates']) # _id has to be a string
+        property_dict = {i:j for i,j in data['properties'].items() if j != None} # take out null
+        pattern = '*_percent'
+        doc = {}
+        for item in property_dict:
+            if fnmatch.fnmatch(item, pattern):
+                party_name = item.replace('_percent', '')
+                doc[party_name] = property_dict[item]
+            else: doc[item] = property_dict[item]
+        result[coordinate] = doc
+
+    print('start uploading data')
+    for d in result:
+        if d not in db: db[d] = result[d]
+
+
 branddb = server1['twitter_data']
 parties = server1['parties_data']
 vaccine = server2['twitter_data']
+
+# apply mapreduce functions to couchdb
+with open('./views/vaccine.json', 'r') as f:
+    vaccine.save(json.load(f))
+    f.close()
+with open('./views/brand_view.json') as f:
+    branddb.save(json.load(f))
+    f.close()
+with open('./views/parties_views.json') as f:
+    parties.save(json.load(f))
+    f.close()
+
+
 
 def is_rural(city_name):
     return city_name not in ['Adelaide', 'Melbourne', 'Brisbane', 'Canberra', 'Perth', 'Sydney']
