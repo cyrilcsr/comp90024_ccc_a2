@@ -106,8 +106,12 @@ const PositveMap = ({ onClick }) => {
 
 }, [map])
 
-return <div ref={mapContainer} className='pos-map'onClick={onClick}/>;
-
+return( 
+    <div>
+    <h3 className='scenario-title'>How many Australians support COVID-19 vaccine? </h3>
+    <div ref={mapContainer} className='pos-map'onClick={onClick}/>
+    </div>
+)
 }
 
 

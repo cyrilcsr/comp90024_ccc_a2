@@ -16,9 +16,9 @@ export default function OpenPage() {
     return (
 
         <div className='pos-map-container scenario'>
-            <PositivePieLeft className='positive-charts'/>
-            <PositiveMap className='positive-map' onClick={routeChange}/>
-            <PositivePieRight className='positive-charts'/>
+                    <PositivePieLeft className='positive-charts'/>
+                    <PositiveMap className='positive-map' onClick={routeChange}/>
+                    <PositivePieRight className='positive-charts'/>
         </div>
 
     )

@@ -36,7 +36,10 @@ export default class BrandLine extends Component {
             legend: {
               tooltipHoverFormatter: function(val, opts) {
                 return val + ' - ' + opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] + ''
-              }
+              },
+              top:0,
+
+            
             },
             markers: {
               size: 0,
@@ -46,6 +49,10 @@ export default class BrandLine extends Component {
             },
             xaxis: {
               categories: [],
+              name:"Date"
+            },
+            yaxis:{
+              name:"Count of Tweets",
             },
             tooltip: {
               y: [
@@ -147,11 +154,12 @@ export default class BrandLine extends Component {
         })
       }
     }
+    
     render() {
         return (
             <div>
               <SelectionBar handleChange={this.handleChange} name={this.state.param} type='brand'/>
-              <Chart options={this.state.options} series={this.state.series} type="line" height={500} width={600}/>
+              <Chart options={this.state.options} series={this.state.series} type="line" height={400} width={600}/>
             </div>
 
         )

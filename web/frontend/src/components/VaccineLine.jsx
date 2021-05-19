@@ -47,7 +47,9 @@ export default class VaccineLine extends Component {
             },
             xaxis: {
               categories: [],
+              name:"Date",
             },
+
             tooltip: {
               y: [
                 {
@@ -127,11 +129,12 @@ export default class VaccineLine extends Component {
               ],
               options: {
                 xaxis: {
-                  categories: [...dates]
+                  categories: [...dates],
+                  name:"Date"
                 },
                 title: {
                   text: this.state.param === '' ? 'Overall Tweet' : this.state.param
-                }
+                },
               }
             })
         })
@@ -154,7 +157,7 @@ export default class VaccineLine extends Component {
         return (
             <div>
               <SelectionBar handleChange={this.handleChange} name={this.state.param} type='vaccine'/>
-              <Chart options={this.state.options} series={this.state.series} type="line" height={500} width={600} />
+              <Chart options={this.state.options} series={this.state.series} type="line" height={400} width={600} />
             </div>
 
         )
