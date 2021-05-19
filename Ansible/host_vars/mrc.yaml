@@ -52,6 +52,12 @@ security_groups:
     port_range_min: 9100
     port_range_max: 9200
     remote_ip_prefix: 0.0.0.0/0
+  - name: flask
+    description: "Open 5000 for flask backend"
+    protocol: tcp
+    port_range_min: 5000
+    port_range_max: 5000
+    remote_ip_prefix: 0.0.0.0/0
 # Instance
 instances:
   - name: database1
