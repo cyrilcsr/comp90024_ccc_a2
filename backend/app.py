@@ -9,16 +9,17 @@ import fnmatch
 import configparser
 
 # read .ini file to get ips for db
-IN_FILE = '../../config/instance_ips.ini'
+IN_FILE = 'config/instance_ips.ini'
 config = configparser.ConfigParser(allow_no_value=True)
 config.read(IN_FILE)
+print(config.sections())
 (ip1, _),(ip2, _) = config.items('database')
 
 server1_url = 'http://admin:couchdb@' + ip1 + ':5984'
-server2_url = 'http://admin:couchdb@' + ip2 + ':5984'
+#server2_url = 'http://admin:couchdb@' + ip2 + ':5984'
 
 server1 = Server(server1_url)
-server2 = Server(server2_url)
+#server2 = Server(server2_url)
 
 
 # Upload aurin data to couchdb
@@ -26,7 +27,7 @@ if not 'parties_data' in server1:
     db = server1.create('parties_data')
 else: db = server1['parties_data']
 
-with open('./grouped_election_data.json') as jsonfile:
+with open('backend/grouped_election_data.json') as jsonfile:
     data = json.load(jsonfile)
     jsonfile.close()
     result = {}
@@ -54,20 +55,20 @@ if 'twitter_data' in server1:
     branddb = server1['twitter_data']
 else: branddb = server1.create('twitter_data')
 
-if 'twitter_data' in server2:
-    vaccine = server2['twitter_data']
-else: vaccine = server2.create('twitter_data')
+#if 'twitter_data' in server2:
+ #   vaccine = server2['twitter_data']
+#else: vaccine = server2.create('twitter_data')
 
 parties = server1['parties_data']
 
 # apply mapreduce functions to couchdb
-with open('./views/vaccine.json', 'r') as f:
-    vaccine.save(json.load(f))
-    f.close()
-with open('./views/brand_view.json', 'r') as f:
+#with open('backend/views/vaccine.json', 'r') as f:
+ #   vaccine.save(json.load(f))
+  #  f.close()
+with open('backend/views/brand_view.json', 'r') as f:
     branddb.save(json.load(f))
     f.close()
-with open('./views/parties_views.json', 'r') as f:
+with open('backend/views/parties_views.json', 'r') as f:
     parties.save(json.load(f))
     f.close()
 
