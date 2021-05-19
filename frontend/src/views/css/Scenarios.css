@@ -1,0 +1,26 @@
+.scenario {
+    height: 100vh;
+    width: 100vw;
+    background-color: #242424;
+    padding-left: 1rem;
+    align-items: center;
+}
+
+.scenario1-body {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 80%;
+    margin: 0;
+    padding: 100px 0 0 0;
+}
+
+.scenario-title {
+    color: #fff8dc;
+    text-align: center;
+}
+.mapboxgl-popup {
+max-width: 400px;
+font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}

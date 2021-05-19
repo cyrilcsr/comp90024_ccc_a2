@@ -1,0 +1,34 @@
+{
+    "_id": "_design/mapviews",
+    "language": "javascript",
+    "views": {
+        "positive_score": {
+            "map": "function(doc){ if(doc.sentiment_score > 0) { emit(doc.city, 1) } }",
+            "reduce": "_count"
+        },
+        "other_score": {
+            "map": "function(doc){ if(doc.sentiment_score <= 0) { emit(doc.city, 1) } }",
+            "reduce": "_count"
+        },
+        "vaccine_trend": {
+            "map": "function(doc){ emit(doc.created_at, doc.sentiment_score) }",
+            "reduce": "_count"
+        },
+        "posneg_vaccine_trend": {
+            "map": "function(doc){ var flag = doc.sentiment_score >= 0 ? 'pos' : 'neg'; emit([doc.created_at, flag, doc.city], doc.sentiment_score) }",
+            "reduce": "_count"
+        },
+        "city_total_sentiment_score": {
+            "map": "function(doc){ if(doc.city !== 'Australia') { emit(doc.city, doc.sentiment_score) } }",
+            "reduce": "_sum"
+        },
+        "sentiment_distribution": {
+            "map": "function(doc){ if(doc.city !== 'Australia') { emit([doc.city, doc.sentiment_score], 1) } }",
+            "reduce": "_count"
+        },
+        "city_count": {
+            "map": "function(doc){ if(doc.city !== 'Australia'){ emit(doc.city, 1) } }",
+            "reduce": "_count"
+        }
+    }
+  }
