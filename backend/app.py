@@ -17,7 +17,7 @@ if not 'parties_data' in server1:
     db = server1.create('parties_data')
 else: db = server1['parties_data']
 
-with open('../../../../../grouped_election_data(1).json') as jsonfile:
+with open('./grouped_election_data(1).json') as jsonfile:
     data = json.load(jsonfile)
     jsonfile.close()
     result = {}
