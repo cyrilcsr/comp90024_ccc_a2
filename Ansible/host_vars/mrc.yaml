@@ -58,6 +58,12 @@ security_groups:
     port_range_min: 5000
     port_range_max: 5000
     remote_ip_prefix: 0.0.0.0/0
+    - name: frontend
+    description: "Open 3000 for frontend"
+    protocol: tcp
+    port_range_min: 3000
+    port_range_max: 3000
+    remote_ip_prefix: 0.0.0.0/0
 # Instance
 instances:
   - name: database1

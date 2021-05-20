@@ -159,7 +159,7 @@ RUN npm install
 ccc-backend
 ├── Dockerfile
 ├── backend (copy from github)
-|── config (copy from /home/ubuntu/config)
+├── config (copy from /home/ubuntu/config)
 └── requirements.txt (flask,couchdb,flask_cors)
 
 ##Dockerfile
@@ -188,6 +188,31 @@ docker exec -it backend /bin/bash
 
 
 ####Dcoker frontend####
+ccc-backend
+├── Dockerfile
+├── frontend (copy from github)
+├── config (copy from /home/ubuntu/config)
+└── requirements.txt (flask,couchdb,flask_cors)
+
+##Dockerfile
+FROM node:14
+ENV HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000/
+ENV HTTPS_PROXY=http://wwwproxy.unimelb.edu.au:8000/
+ENV http_proxy=http://wwwproxy.unimelb.edu.au:8000/
+ENV https_proxy=http://wwwproxy.unimelb.edu.au:8000/
+ENV no_proxy=localhost,127.0.0.1,localaddress,172.16.0.0/12,.melbourne.rc.nectar.org.au,.storage.unimelb.edu.au,.cloud.unimelb.edu.au
+# Create app directory
+WORKDIR /home
+ADD . .
+RUN npm install frontend
+CMD npm start --prefix frontend
+
+##docker bash
+docker build -f Dockerfile -t ccc_frontend:1.0 .
+docker run -d -p 3000:3000 --name frontend ccc_frontend:1.0
+docker images
+docker ps
+docker logs -f backend
 
 
 ####Docker Help###
