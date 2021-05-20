@@ -66,16 +66,21 @@ else: branddb = server1.create('twitter_data')
 
 parties = server1['parties_data']
 
-# apply mapreduce functions to couchdb
-#with open('backend/views/vaccine.json', 'r') as f:
- #   vaccine.save(json.load(f))
-  #  f.close()
-with open('backend/views/brand_view.json', 'r') as f:
-    branddb.save(json.load(f))
-    f.close()
-with open('backend/views/parties_views.json', 'r') as f:
-    parties.save(json.load(f))
-    f.close()
+try:
+
+    # apply mapreduce functions to couchdb
+    #with open('backend/views/vaccine.json', 'r') as f:
+    # vaccine.save(json.load(f))
+    # f.close()
+    with open('backend/views/brand_view.json', 'r') as f:
+        branddb.save(json.load(f))
+        f.close()
+    with open('backend/views/parties_views.json', 'r') as f:
+        parties.save(json.load(f))
+        f.close()
+except: 
+    print('Conflict occured')
+
 
 app = Flask(__name__)
 CORS(app)
