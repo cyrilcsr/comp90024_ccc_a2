@@ -1,0 +1,199 @@
+ansible templet replace variable (IP)
+instance_image
+NDBjNDZlYmUzZWMzYTQ2
+. unimelb-comp90024-2021-grp-41-openrc.sh 
+./unimelb-comp90024-2021-grp-41-openrc.sh; ansible-playbook mrc.yaml
+
+
+#### Equivalent manual setup on Server###
+1. Setup system proxy
+sudo nano /etc/environment
+HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000/
+HTTPS_PROXY=http://wwwproxy.unimelb.edu.au:8000/
+http_proxy=http://wwwproxy.unimelb.edu.au:8000/
+https_proxy=http://wwwproxy.unimelb.edu.au:8000/
+no_proxy=localhost,127.0.0.1,localaddress,172.16.0.0/12,.melbourne.rc.nectar.org.au,.storage.unimelb.edu.au,.cloud.unimelb.edu.au
+
+2. Install package
+sudo apt update
+sudo apt install vim
+sudo apt install docker.io
+sudo apt install docker-compose
+sudo apt install nodejs
+sudo apt install npm
+sudo apt install node-grunt-cli
+sudo apt-get install jq
+sudo apt install vim docker.io nodejs npm node-grunt-cli jq
+
+3. Mount volumn
+sudo fdisk -l
+sudo mkdir /data
+sudo mkfs.ext4 /dev/vdb
+sudo mount /dev/vdb /data
+
+4. Setup docker env 
+sudo systemctl start docker
+
+sudo mkdir -p /etc/systemd/system/docker.service.d
+sudo vi /etc/systemd/system/docker.service.d/http-proxy.conf
+
+[Service]
+Environment="HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000"
+Environment="HTTPS_PROXY=http://wwwproxy.unimelb.edu.au:8000"
+Environment="http_proxy=http://wwwproxy.unimelb.edu.au:8000"
+Environment="https_proxy=http://wwwproxy.unimelb.edu.au:8000"
+Environment="no_proxy=localhost,127.0.0.1,localaddress,172.16.0.0/12,.melbourne.rc.nectar.org.au,.storage.unimelb.edu.au,.cloud.unimelb.edu.au"
+
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+ 
+# check env setup
+sudo systemctl show --property=Environment docker  
+ 
+# docker group for premission 
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+docker run hello-world                                              
+ 
+5. couchDB
+
+git clone https://github.com/AURIN/comp90024.git
+
+export declare -a nodes=(172.17.0.4 172.17.0.3 172.17.0.2)
+export masternode=`echo ${nodes} | cut -f1 -d' '`
+export declare -a othernodes=`echo ${nodes[@]} | sed s/${masternode}//`
+export size=${#nodes[@]}
+export user='admin'
+export pass='admin'
+export VERSION='3.1.1'
+export cookie='a192aeb9904e6590849337933b000c99'
+
+
+
+
+
+unset http_proxy
+unset https_proxy
+unset ftp_proxy
+
+docker run -d -p 5984:5984 --name my-couchdb -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=couchdb couchdb:latest
+docker run -d -p 5984:5984 --name bitnami-couchdb -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=couchdb bitnami/couchdb:latest
+docker run -d -p 5984:5984--name my-couchdb -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=JEUB9fnn couchdb:latest
+docker run -p 0.0.0.0:5984:5984 -d couchdb
+docker inspect my-couchdb | grep IPAddress
+curl 172.17.0.2:5984
+
+docker exec -it my-couchdb /bin/bash
+
+
+
+sudo docker run -d --name couchdb \
+  --log-opt max-size=100m \
+  --restart always \
+  -p 5984:5984 \
+  -p 5986:5986 \
+  -p 4369:4369 \
+  -p 9100-9200:9100-9200 \
+  -v /home/ubuntu/common/data:/opt/couchdb/data \
+  -e COUCHDB_USER='admin' \
+  -e COUCHDB_PASSWORD='couchdb' \
+  -e COUCHDB_SECRET='mysecret' \
+  -e NODENAME='172.26.131.7' \
+  couchdb \
+  -setcookie mycookie
+
+./create-cluster.sh admin couchdb 5984 5986 "172.26.130.118 172.26.131.7"
+
+test-server:172.26.131.7
+test2:172.26.130.118
+database:172.26.133.237
+
+curl http://admin:couchdb@localhost:5984/_membership
+
+curl -X PUT http://admin:couchdb@$172.26.131.7:5984/_nodes/couchdb@172.26.130.118 -d {}
+curl -X PUT http://admin:couchdb@$172.26.131.7:5984/_node/_local/_nodes/couchdb@172.26.130.118 -d {}
+
+curl -XPOST "http://admin:couchdb@172.26.131.7:5984/_cluster_setup"\
+      --header "Content-Type: application/json"\
+      --data "{\"action\": \"add_node\", \"host\":\"172.26.130.118\",\
+             \"port\": \"5984\", \"username\": \"admin\", \"password\":\"couchdb\"}"
+
+
+###Build docker Image####
+docker_test
+├── Dockerfile
+├── myapps
+│ └── hello_world.py
+└── requirements.txt
+
+####Dockerfile####
+FROM python:3.7
+ENV HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000/
+ENV HTTPS_PROXY=http://wwwproxy.unimelb.edu.au:8000/
+ENV http_proxy=http://wwwproxy.unimelb.edu.au:8000/
+ENV https_proxy=http://wwwproxy.unimelb.edu.au:8000/
+ENV no_proxy=localhost,127.0.0.1,localaddress,172.16.0.0/12,.melbourne.rc.nectar.org.au,.storage.unimelb.edu.au,.cloud.unimelb.edu.au
+WORKDIR ./myapps
+ADD . .
+RUN pip3 install -r requirements.txt
+CMD ["python", "./myapps/test.py"]
+
+#build
+docker build -f Dockerfile -t docker_test:1.0 .
+
+#distribute docker Images
+docker login
+
+docker image tag [imageName] [username]/[repository]:[tag]
+docker image build -t [username]/[repository]:[tag] .
+
+docker image push [username]/[repository]:[tag]
+
+FROM node:14
+RUN npm install
+
+
+####Docker backend#####
+
+ccc-backend
+├── Dockerfile
+├── backend (copy from github)
+|── config (copy from /home/ubuntu/config)
+└── requirements.txt (flask,couchdb,flask_cors)
+
+##Dockerfile
+FROM python:3.8
+ENV HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000/
+ENV HTTPS_PROXY=http://wwwproxy.unimelb.edu.au:8000/
+ENV http_proxy=http://wwwproxy.unimelb.edu.au:8000/
+ENV https_proxy=http://wwwproxy.unimelb.edu.au:8000/
+ENV no_proxy=localhost,127.0.0.1,localaddress,172.16.0.0/12,.melbourne.rc.nectar.org.au,.storage.unimelb.edu.au,.cloud.unimelb.edu.au
+WORKDIR ./backend
+ADD . .
+RUN pip3 install -r requirements.txt
+CMD ["python", "./backend/app.py"]
+
+
+##docker bash
+move config folder under ccc-backend
+docker build -f Dockerfile -t ccc_backend:1.10 .
+docker run -d -p 5000:5000 --name backend ccc_backend:1.10
+docker images
+docker ps
+docker logs -f backend
+
+
+docker exec -it backend /bin/bash
+
+
+####Dcoker frontend####
+
+
+####Docker Help###
+docker images
+docker logs -f backend
+docker exec -it my-couchdb /bin/bash
+
+
+docker run -d -p 5000:5000 --name backend ccc_backend:1.2
