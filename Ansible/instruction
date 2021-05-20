@@ -142,13 +142,7 @@ CMD ["python", "./myapps/test.py"]
 #build
 docker build -f Dockerfile -t docker_test:1.0 .
 
-#distribute docker Images
-docker login
 
-docker image tag [imageName] [username]/[repository]:[tag]
-docker image build -t [username]/[repository]:[tag] .
-
-docker image push [username]/[repository]:[tag]
 
 FROM node:14
 RUN npm install
@@ -188,14 +182,14 @@ docker exec -it backend /bin/bash
 
 
 ####Dcoker frontend####
-ccc-backend
+ccc-frontend
 ├── Dockerfile
-├── frontend (copy from github)
-├── config (copy from /home/ubuntu/config)
-└── requirements.txt (flask,couchdb,flask_cors)
+├── public  README.md  src
+├── (?)config (copy from /home/ubuntu/config)
+└── package.json  package-lock.json
 
 ##Dockerfile
-FROM node:14
+FROM node:12.17
 ENV HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000/
 ENV HTTPS_PROXY=http://wwwproxy.unimelb.edu.au:8000/
 ENV http_proxy=http://wwwproxy.unimelb.edu.au:8000/
@@ -204,8 +198,10 @@ ENV no_proxy=localhost,127.0.0.1,localaddress,172.16.0.0/12,.melbourne.rc.nectar
 # Create app directory
 WORKDIR /home
 ADD . .
-RUN npm install frontend
-CMD npm start --prefix frontend
+RUN npm install
+CMD npm start
+
+
 
 ##docker bash
 docker build -f Dockerfile -t ccc_frontend:1.0 .
@@ -220,5 +216,13 @@ docker images
 docker logs -f backend
 docker exec -it my-couchdb /bin/bash
 
+
+##distribute docker Images
+docker login
+
+docker image tag [imageName] [username]/[repository]:[tag]
+docker image build -t [username]/[repository]:[tag] .
+
+docker image push [username]/[repository]:[tag]
 
 docker run -d -p 5000:5000 --name backend ccc_backend:1.2
