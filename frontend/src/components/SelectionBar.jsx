@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { Dropdown  } from 'react-bootstrap'
-import axios from 'axios'
+import axiosConfig from '../axiosConfig'
 
 import '../css/styles.css'
 
@@ -12,13 +12,13 @@ export default function SelectionBar({ handleChange,  name, type }) {
 
     useEffect(() => {
         if(type === 'brand'){
-            axios.get('http://127.0.0.1:5000/vaccine_brand').then(res => {
+            axiosConfig.get('/vaccine_brand').then(res => {
                 setElements([...res.data.vaccine_brand])
         })
         
     }
     else if(type === 'vaccine'){
-        axios.get('http://127.0.0.1:5000/city_data').then(res => {
+        axiosConfig.get('/city_data').then(res => {
             setElements([...res.data.city])
     })
     }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Chart from 'react-apexcharts'
-import axios from 'axios'
+import axiosConfig from '../axiosConfig'
 
 import SelectionBar from './SelectionBar';
 
@@ -99,8 +99,8 @@ export default class VaccineLine extends Component {
 
       renderChart(){
         var location = this.state.param === 'Rural Area' ? 'rural' : this.state.param
-        const url = 'http://127.0.0.1:5000/vaccine_trend/'
-        axios
+        const url = '/vaccine_trend/'
+        axiosConfig
         .get(url, {
             params: {
                 'location': location

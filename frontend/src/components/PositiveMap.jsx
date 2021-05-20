@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
-import axios from 'axios'
+import axiosConfig from '../axiosConfig'
 import "mapbox-gl/dist/mapbox-gl.css"
 import "../App.css"
 
@@ -16,7 +16,7 @@ const PositveMap = ({ onClick }) => {
   const mapContainer = useRef();
   
   useEffect(() => {
-    const url = 'http://127.0.0.1:5000/total_num_tweet/'
+    const url = '/total_num_tweet/'
     // let radius = 10
     mapboxgl.accessToken = 'pk.eyJ1IjoiamVhbnN4dCIsImEiOiJja2Y3anRnZzEwMzJpMnpsa29ldDExbnZ5In0.9VVP31HO-qw7t14WaWOZ6g';
     const initializeMap = ({ setMap, mapContainer }) => {
@@ -32,7 +32,7 @@ const PositveMap = ({ onClick }) => {
       setMap(map);
       map.resize();
 
-      axios
+      axiosConfig
       .get(url)
       .then(res => {
       const data = res.data

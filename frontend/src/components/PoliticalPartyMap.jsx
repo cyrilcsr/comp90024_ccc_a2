@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
-import axios from 'axios'
+import axiosConfig from '../axiosConfig'
 import "mapbox-gl/dist/mapbox-gl.css"
 import "../App.css"
 
@@ -50,8 +50,8 @@ useEffect(() => {
 
   function renderMap(map, party){
     console.log('rendering map')
-    axios
-    .get('http://127.0.0.1:5000/political_party/', {
+    axiosConfig
+    .get('/political_party/', {
       params: {
         'party': party
       }

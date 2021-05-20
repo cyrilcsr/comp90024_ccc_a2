@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Chart from 'react-apexcharts'
-import axios from 'axios'
+import axiosConfig from '../axiosConfig'
 
 import SelectionBar from '../components/SelectionBar'
 
@@ -102,9 +102,8 @@ export default class BrandLine extends Component {
         })
       }
       renderChart(){
-        const url = 'http://127.0.0.1:5000/brand_trend/'
-        axios
-        .get(url, {
+        axiosConfig
+        .get('/brand_trend', {
             params: {
                 'brand': this.state.param
             }

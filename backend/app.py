@@ -12,7 +12,7 @@ import configparser
 IN_FILE = '../../config/instance_ips.ini'
 config = configparser.ConfigParser(allow_no_value=True)
 config.read(IN_FILE)
-(ip1, _),(ip2, _) = config.items('database')
+(ip1, _),(ip2, _),(ip3, _) = config.items('database')
 
 server1_url = 'http://admin:couchdb@' + ip1 + ':5984'
 server2_url = 'http://admin:couchdb@' + ip2 + ':5984'
@@ -61,6 +61,7 @@ else: vaccine = server2.create('twitter_data')
 parties = server1['parties_data']
 
 # apply mapreduce functions to couchdb
+if(vaccine.v)
 with open('./views/vaccine.json', 'r') as f:
     vaccine.save(json.load(f))
     f.close()
@@ -426,4 +427,4 @@ def political_party_per_area():
     return jsonify(data)
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=False, host='0.0.0.0')
