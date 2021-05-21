@@ -28,7 +28,7 @@ if not 'parties_data' in server1:
     db = server1.create('parties_data')
 else: db = server1['parties_data']
 
-with open('backend/grouped_election_data.json') as jsonfile:
+with open('grouped_election_data.json') as jsonfile:
     data = json.load(jsonfile)
     jsonfile.close()
     result = {}
@@ -69,13 +69,13 @@ parties = server1['parties_data']
 try:
 
     # apply mapreduce functions to couchdb
-    #with open('backend/views/vaccine.json', 'r') as f:
+    #with open('views/vaccine.json', 'r') as f:
     # vaccine.save(json.load(f))
     # f.close()
-    with open('backend/views/brand_view.json', 'r') as f:
+    with open('views/brand_view.json', 'r') as f:
         branddb.save(json.load(f))
         f.close()
-    with open('backend/views/parties_views.json', 'r') as f:
+    with open('views/parties_views.json', 'r') as f:
         parties.save(json.load(f))
         f.close()
 except: 
