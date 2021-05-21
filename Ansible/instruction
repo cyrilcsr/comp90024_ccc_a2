@@ -172,7 +172,7 @@ CMD ["python", "./backend/app.py"]
 ##docker bash
 move config folder under ccc-backend
 docker build -f Dockerfile -t ccc_backend:1.2 . --no-cache
-docker run -d -p 5000:5000 --name backend ccc_backend:1.1
+docker run -d -p 5000:5000 -v /home/ubuntu/config:/home/config --name backend ccc_backend:1.2
 docker images
 docker ps
 docker logs -f backend
@@ -225,6 +225,8 @@ docker image build -t [username]/[repository]:[tag] .
 
 docker image push [username]/[repository]:[tag]
 
+docker image tag ccc_backend:1.2 cyrilcsr/ccc_backend:1.2
+docker image push cyrilcsr/ccc_backend:1.2
 docker run -d -p 5000:5000 --name backend ccc_backend:1.2
 
 # Remove image layer
@@ -232,3 +234,7 @@ docker rmi --force 'image id'
 docker rmi --force my-djnago-app:latest
 docker build -t my-djnago-app:latest . --no-cache
 docker push my-djnago-app:latest
+
+
+####Docker-compose####
+docker-compose -f docker-backend.yml up -d
