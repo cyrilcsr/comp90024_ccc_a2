@@ -171,8 +171,8 @@ CMD ["python", "./backend/app.py"]
 
 ##docker bash
 move config folder under ccc-backend
-docker build -f Dockerfile -t ccc_backend:1.10 .
-docker run -d -p 5000:5000 --name backend ccc_backend:1.10
+docker build -f Dockerfile -t ccc_backend:1.2 . --no-cache
+docker run -d -p 5000:5000 --name backend ccc_backend:1.1
 docker images
 docker ps
 docker logs -f backend

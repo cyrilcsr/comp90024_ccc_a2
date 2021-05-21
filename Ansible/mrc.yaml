@@ -23,3 +23,12 @@
 
   roles:
     - role: instance-setup
+
+- hosts: backend
+  remote_user: '{{ remote_username }}'
+  vars_files:
+    - host_vars/mrc.yaml
+  gather_facts: true
+
+  roles:
+    - role: deploy-backend
