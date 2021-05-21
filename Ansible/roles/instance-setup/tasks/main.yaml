@@ -123,9 +123,3 @@
 - name: reset ssh connection to allow user changes to affect ansible user
   ansible.builtin.meta:
     reset_connection
-
-- name: Create a hello-world container for testing
-  community.docker.docker_container:
-    name: docker
-    image: hello-world
-    state: started
