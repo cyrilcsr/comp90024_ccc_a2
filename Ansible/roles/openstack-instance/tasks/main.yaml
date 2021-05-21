@@ -5,7 +5,7 @@
     name: '{{ item.name }}'
     image: '{{ instance_image }}'
     key_name: '{{ instance_key_name }}'
-    flavor: '{{ instance_flavor }}'
+    flavor: '{{ item.instance_flavor }}'
     availability_zone: '{{ availability_zone }}'
     security_groups: '{{ sg_names }}'
     volumes: '{{ item.volumes }}'
@@ -42,7 +42,7 @@
     name: '{{ item.openstack.public_v4 }}'
     groups: database
   loop: '{{ os_instance.results }}'
-  when: item.openstack.name is match("database.*")
+  when: item.openstack.name is match("database.*") or item.openstack.name is match("backend")
 
 - name: Add host - Webserver instance
   add_host:
@@ -50,6 +50,13 @@
     groups: webserver
   loop: '{{ os_instance.results }}'
   when: item.openstack.name is match("webserver")
+
+- name: Add host - Backend instance
+  add_host:
+    name: '{{ item.openstack.public_v4 }}'
+    groups: backend
+  loop: '{{ os_instance.results }}'
+  when: item.openstack.name is match("backend")
 
 - name: create file
   template:

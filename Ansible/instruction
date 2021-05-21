@@ -226,3 +226,9 @@ docker image build -t [username]/[repository]:[tag] .
 docker image push [username]/[repository]:[tag]
 
 docker run -d -p 5000:5000 --name backend ccc_backend:1.2
+
+# Remove image layer
+docker rmi --force 'image id'
+docker rmi --force my-djnago-app:latest
+docker build -t my-djnago-app:latest . --no-cache
+docker push my-djnago-app:latest
