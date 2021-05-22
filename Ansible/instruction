@@ -246,3 +246,6 @@ docker push my-djnago-app:latest
 ####Docker-compose####
 docker-compose -f docker-backend.yml up -d
 docker-compose -f couchdb.yml up -d
+docker-compose -f docker-frontend-node.yml up -d
+docker-compose -f docker-frontend-app.yml up -d
+
