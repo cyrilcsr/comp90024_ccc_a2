@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Chart from 'react-apexcharts'
-import axiosConfig from '../axiosConfig'
+import axios from 'axios'
 
 import SelectionBar from './SelectionBar';
 
@@ -99,44 +99,48 @@ export default class VaccineLine extends Component {
 
       renderChart(){
         var location = this.state.param === 'Rural Area' ? 'rural' : this.state.param
-        const url = '/vaccine_trend/'
-        axiosConfig
-        .get(url, {
-            params: {
-                'location': location
-            }
-        })
+        axios
+        .get('http://localhost:5000')
         .then(res => {
-            const dates = []
-            Object.keys(res.data).forEach(d => dates.push(d))
-            const neg_tweet = []
-            const pos_tweet = []
-            const total_tweet = []
-            dates.forEach(d => {
-                neg_tweet.push(res.data[d].neg)
-                pos_tweet.push(res.data[d].pos)
-                total_tweet.push(res.data[d].total)
-            })
-            this.setState({
-                series:[{
-                  name: "Positive Tweets",
-                  data: [...pos_tweet]
-                },
-                {
-                  name: "Negtive Tweet",
-                  data: [...neg_tweet]
-                }
-              ],
-              options: {
-                xaxis: {
-                  categories: [...dates],
-                  name:"Date"
-                },
-                title: {
-                  text: this.state.param === '' ? 'Overall Tweet' : this.state.param
-                },
+          const url = 'http://' + res.data.data + ':5000/vaccine_trend'
+          axios
+          .get(url, {
+              params: {
+                  'location': location
               }
-            })
+          })
+          .then(res => {
+              const dates = []
+              Object.keys(res.data).forEach(d => dates.push(d))
+              const neg_tweet = []
+              const pos_tweet = []
+              const total_tweet = []
+              dates.forEach(d => {
+                  neg_tweet.push(res.data[d].neg)
+                  pos_tweet.push(res.data[d].pos)
+                  total_tweet.push(res.data[d].total)
+              })
+              this.setState({
+                  series:[{
+                    name: "Positive Tweets",
+                    data: [...pos_tweet]
+                  },
+                  {
+                    name: "Negtive Tweet",
+                    data: [...neg_tweet]
+                  }
+                ],
+                options: {
+                  xaxis: {
+                    categories: [...dates],
+                    name:"Date"
+                  },
+                  title: {
+                    text: this.state.param === '' ? 'Overall Tweet' : this.state.param
+                  },
+                }
+              })
+          })
         })
       }
 

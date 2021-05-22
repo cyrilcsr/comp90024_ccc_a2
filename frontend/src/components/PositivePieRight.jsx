@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import axiosConfig from '../axiosConfig'
+import axios from 'axios'
 import Chart from 'react-apexcharts'
 
 import '../css/styles.css'
@@ -38,17 +38,23 @@ export default class PositivePieRight extends Component {
     }
 
     componentDidMount(){
-      const url = '/positive_score/'
-      axiosConfig
-      .get(url)
+      axios
+      .get('http://localhost:5000')
       .then(res => {
-        const data = res.data.data
-        this.setState({ 
-          series1: [data.Brisbane.positive, data.Brisbane.others],
-          // series2: [data.Perth.positive, data.Perth.others],
-          // series3: [data.RuralArea.positive, data.RuralArea.others]
+        const url = 'http://' + res.data.data + ':5000/positive_score/'
+        axios
+        .get(url)
+        .then(res => {
+          const data = res.data.data
+          this.setState({ 
+            series1: [data.Brisbane.positive, data.Brisbane.others],
+            // series2: [data.Perth.positive, data.Perth.others],
+            // series3: [data.RuralArea.positive, data.RuralArea.others]
+        })
+        })
       })
-      })
+   
+
     }
     render() {
         return (

@@ -1,6 +1,8 @@
 from flask import Flask
 from flask import jsonify
 from flask import request
+from flask import  send_from_directory
+from flask import abort
 from couchdb.client import Server
 from flask_cors import CORS
 import json
@@ -106,6 +108,12 @@ def construct_geojson():
     }
     return data
 
+@app.route('/send_ini/')
+def send_ini():
+    try:
+        send_from_directory(filename='instance_ips.ini')
+    except FileNotFoundError:
+        abort(404)
 
 @app.route('/num_tweet_city/')
 def num_tweet_city():
