@@ -17,5 +17,5 @@ services:
             - COUCHDB_USER=admin
             - COUCHDB_PASSWORD=couchdb
             - COUCHDB_SECRET=mysecret
-            - NODENAME= db1
+            - NODENAME=172.26.133.8
         image: couchdb:latest
