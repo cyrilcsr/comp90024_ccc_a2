@@ -49,9 +49,10 @@ export default class PositivePieLeft extends Component {
       }
     
     renderChart(){
-        axios
-        .get('http://localhost:5000')
-        .then(res => {
+      var nodeURL = `http://${window.location.hostname}:5000`
+      axios
+      .get(nodeURL)
+      .then(res => {
           const url = 'http://' + res.data.data + ':5000/positive_per_city/'
           axios
           .get(url, {

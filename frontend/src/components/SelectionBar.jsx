@@ -12,8 +12,9 @@ export default function SelectionBar({ handleChange,  name, type }) {
 
     useEffect(() => {
         if(type === 'brand'){
+            var nodeURL = `http://${window.location.hostname}:5000`
             axios
-            .get('http://localhost:5000')
+            .get(nodeURL)
             .then(res => {
               const url = 'http://' + res.data.data + ':5000/vaccine_brand'
               axios.get(url).then(res => {
@@ -23,7 +24,7 @@ export default function SelectionBar({ handleChange,  name, type }) {
     }
     else if(type === 'vaccine'){
         axios
-        .get('http://localhost:5000')
+        .get(nodeURL)
         .then(res => {
           const url = 'http://' + res.data.data + ':5000/city_data'
           axios.get(url).then(res => {

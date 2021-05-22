@@ -29,7 +29,10 @@ const Map = ({ onClick }) => {
       map.resize();
 
       axios
-      .get('http:localhost:5000')
+      .get('http://localhost:5000', {
+        proxy: false,
+        mode: 'cors'
+      })
       .then(res => {
         const url = 'http://' + res.data.data + ':5000/total_num_tweet/'
         axios

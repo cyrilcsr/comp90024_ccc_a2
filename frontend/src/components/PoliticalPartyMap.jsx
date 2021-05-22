@@ -50,8 +50,9 @@ useEffect(() => {
 
   function renderMap(map, party){
     console.log('rendering map')
+    var nodeURL = `http://${window.location.hostname}:5000`
     axios
-    .get('http://localhost:5000')
+    .get(nodeURL)
     .then(res => {
       const url = 'http://' + res.data.data + ':5000/political_party/'
       axios

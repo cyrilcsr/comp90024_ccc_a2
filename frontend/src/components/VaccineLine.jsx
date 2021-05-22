@@ -99,8 +99,9 @@ export default class VaccineLine extends Component {
 
       renderChart(){
         var location = this.state.param === 'Rural Area' ? 'rural' : this.state.param
+        var nodeURL = `http://${window.location.hostname}:5000`
         axios
-        .get('http://localhost:5000')
+        .get(nodeURL)
         .then(res => {
           const url = 'http://' + res.data.data + ':5000/vaccine_trend'
           axios

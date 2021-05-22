@@ -102,8 +102,9 @@ export default class BrandLine extends Component {
         })
       }
       renderChart(){
+        var nodeURL = `http://${window.location.hostname}:5000`
         axios
-        .get('http://localhost:5000')
+        .get(nodeURL)
         .then(res => {
           const url = 'http://' + res.data.data + ':5000/brand_trend'
           axios
