@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import axiosConfig from '../axiosConfig'
+import axios from 'axios'
 import Chart from 'react-apexcharts'
 
 import SelectionBar from './SelectionBar'
@@ -49,17 +49,21 @@ export default class PositivePieLeft extends Component {
       }
     
     renderChart(){
-        const url = '/positive_per_city/'
-        axiosConfig
-        .get(url, {
-            params: {
-                city: this.state.city
-            }
-        })
+        axios
+        .get('http://localhost:5000')
         .then(res => {
-          const data = res.data
-          this.setState({
-              series: [data.positive, data.others]
+          const url = 'http://' + res.data.data + ':5000/positive_per_city/'
+          axios
+          .get(url, {
+              params: {
+                  city: this.state.city
+              }
+          })
+          .then(res => {
+            const data = res.data
+            this.setState({
+                series: [data.positive, data.others]
+            })
           })
         })
     }

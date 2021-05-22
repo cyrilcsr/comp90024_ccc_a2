@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
-import axiosConfig from '../axiosConfig'
+import axios from 'axios'
 import "mapbox-gl/dist/mapbox-gl.css"
 import "../App.css"
 
@@ -27,82 +27,87 @@ const PositveMap = ({ onClick }) => {
       zoom: 3.5
     });
     // map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-
     map.on("load", () => {
       setMap(map);
       map.resize();
 
-      axiosConfig
-      .get(url)
+      axios
+      .get('http://localhost:5000')
       .then(res => {
-      const data = res.data
-
-      ExampleData.features.forEach(location => {
-        if(data[location.properties.name]){
-          let total = data[location.properties.name].total_tweet
-          let pos = data[location.properties.name].pos_tweet
-          location.properties.total_tweet = total
-          location.properties.pos_tweet = pos
-        }
+        const url = 'http://' + res.data.data + ':5000/total_num_tweet/'
+        axios
+        .get(url)
+        .then(res => {
+        const data = res.data
+  
+        ExampleData.features.forEach(location => {
+          if(data[location.properties.name]){
+            let total = data[location.properties.name].total_tweet
+            let pos = data[location.properties.name].pos_tweet
+            location.properties.total_tweet = total
+            location.properties.pos_tweet = pos
+          }
+        })
       })
-    })
-      .then(() => {
-
-        map.addSource("positive_tweet", {
-          type: "geojson",
-          data: ExampleData
-        })
-        // add a circle layer to the map
-        map.addLayer({
-          id: "positive_tweet",
-          type: "circle",
-          source: "positive_tweet",
-          paint: {
-            'circle-color':[
-              'match',
-              ['get', 'type'],
-              'metropolitan',
-              '#fbb03b',
-              'rural',
-              '#223b53',
-              /* other */ '#ccc'
-            ],
-            "circle-radius":['+', -10, ['number', ['get', 'pos_tweet'], -10]],
-            'circle-opacity': 0.5,
-          },
-
-        });
-
-        // my cute tiny popup
-        var popup = new mapboxgl.Popup({
-          closeButton: false,
-          closeOnClick: false
-        });
-
-        function constructHTML(ele){
-          return `
-          <div style="text-align: center;"><p style="font-size: 18px; margin-bottom: 0;">${ele.name}</p></div>
-          <div><strong>support raio </strong>: ${100 * (ele.pos_tweet / ele.total_tweet).toPrecision(2)}%</div>
-          `
-        }
-
-        map.on('mousemove', 'positive_tweet', (e) => {
-          map.getCanvas().style.cursor = 'pointer'
-
-          popup.setLngLat(e.features[0].geometry.coordinates)
-          .setHTML(constructHTML(e.features[0].properties))
-          .addTo(map);
-          
-        })
-
-        map.on('mouseleave', 'positive_tweet', (e) => {
-          map.getCanvas().style.cursor = ''
+        .then(() => {
+  
+          map.addSource("positive_tweet", {
+            type: "geojson",
+            data: ExampleData
+          })
+          // add a circle layer to the map
+          map.addLayer({
+            id: "positive_tweet",
+            type: "circle",
+            source: "positive_tweet",
+            paint: {
+              'circle-color':[
+                'match',
+                ['get', 'type'],
+                'metropolitan',
+                '#fbb03b',
+                'rural',
+                '#223b53',
+                /* other */ '#ccc'
+              ],
+              "circle-radius":['+', -10, ['number', ['get', 'pos_tweet'], -10]],
+              'circle-opacity': 0.5,
+            },
+  
+          });
+  
+          // my cute tiny popup
+          var popup = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+          });
+  
+          function constructHTML(ele){
+            return `
+            <div style="text-align: center;"><p style="font-size: 18px; margin-bottom: 0;">${ele.name}</p></div>
+            <div><strong>support raio </strong>: ${100 * (ele.pos_tweet / ele.total_tweet).toPrecision(2)}%</div>
+            `
+          }
+  
+          map.on('mousemove', 'positive_tweet', (e) => {
+            map.getCanvas().style.cursor = 'pointer'
+  
+            popup.setLngLat(e.features[0].geometry.coordinates)
+            .setHTML(constructHTML(e.features[0].properties))
+            .addTo(map);
+            
+          })
+  
+          map.on('mouseleave', 'positive_tweet', (e) => {
+            map.getCanvas().style.cursor = ''
+          })
         })
       })
     })
   }
 
   if (!map) initializeMap({ setMap, mapContainer });
+
 
 }, [map])
 

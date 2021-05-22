@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
-import axiosConfig from '../axiosConfig'
+import axios from 'axios'
 import "mapbox-gl/dist/mapbox-gl.css"
 import "../App.css"
 
@@ -50,68 +50,73 @@ useEffect(() => {
 
   function renderMap(map, party){
     console.log('rendering map')
-    axiosConfig
-    .get('/political_party/', {
-      params: {
-        'party': party
-      }
-    })
+    axios
+    .get('http://localhost:5000')
     .then(res => {
-      console.log('adding source')
-
-      // removing previous layer & source
-      var layer = map.getLayer('2019_election');
-      if(typeof layer !== 'undefined') {
-      map.removeLayer('2019_election').removeSource('party_support');
-    }
-
-      map.addSource('party_support', {
-        type: 'geojson',
-        data: res.data,
-      });
-      console.log('adding layer')
-      map.addLayer({
-        id:"2019_election",
-        type: 'circle',
-        source: 'party_support',
-        'paint': {
-          'circle-radius': 3,
-          'circle-color': {
-            property: 'mag',
-            stops: [
-            [0, '#f1f075'],
-            [80, '#e55e5e']
-            ]
-            },
-          'circle-opacity': 0.5,
-          }
-        });
-
-
-      // my cute tiny popup
-      var popup = new mapboxgl.Popup({
-        closeButton: false,
-        closeOnClick: false
-      });
-
-      function constructHTML(ele){
-        return `
-        <div style="text-align: center;"><p style="font-size: 20px; margin-bottom: 0;">Party Support Percent</p></div>
-        <div><strong>support raio </strong>: ${ele.mag}%</div>
-        <div><strong>State </strong>: ${ele.state}</div>
-        `
-      }
-
-      map.on('mousemove', '2019_election', (e) => {
-        map.getCanvas().style.cursor = 'pointer'
-        popup.setLngLat(e.features[0].geometry.coordinates)
-        .setHTML(constructHTML(e.features[0].properties))
-        .addTo(map);
-        
+      const url = 'http://' + res.data.data + ':5000/political_party/'
+      axios
+      .get(url, {
+        params: {
+          'party': party
+        }
       })
-
-      map.on('mouseleave', '2019_election', (e) => {
-        map.getCanvas().style.cursor = ''
+      .then(res => {
+        console.log('adding source')
+  
+        // removing previous layer & source
+        var layer = map.getLayer('2019_election');
+        if(typeof layer !== 'undefined') {
+        map.removeLayer('2019_election').removeSource('party_support');
+      }
+  
+        map.addSource('party_support', {
+          type: 'geojson',
+          data: res.data,
+        });
+        console.log('adding layer')
+        map.addLayer({
+          id:"2019_election",
+          type: 'circle',
+          source: 'party_support',
+          'paint': {
+            'circle-radius': 3,
+            'circle-color': {
+              property: 'mag',
+              stops: [
+              [0, '#f1f075'],
+              [80, '#e55e5e']
+              ]
+              },
+            'circle-opacity': 0.5,
+            }
+          });
+  
+  
+        // my cute tiny popup
+        var popup = new mapboxgl.Popup({
+          closeButton: false,
+          closeOnClick: false
+        });
+  
+        function constructHTML(ele){
+          return `
+          <div style="text-align: center;"><p style="font-size: 20px; margin-bottom: 0;">Party Support Percent</p></div>
+          <div><strong>support raio </strong>: ${ele.mag}%</div>
+          <div><strong>State </strong>: ${ele.state}</div>
+          `
+        }
+  
+        map.on('mousemove', '2019_election', (e) => {
+          map.getCanvas().style.cursor = 'pointer'
+          popup.setLngLat(e.features[0].geometry.coordinates)
+          .setHTML(constructHTML(e.features[0].properties))
+          .addTo(map);
+          
+        })
+  
+        map.on('mouseleave', '2019_election', (e) => {
+          map.getCanvas().style.cursor = ''
+        })
       })
     })
   }

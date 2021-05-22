@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { Dropdown  } from 'react-bootstrap'
-import axiosConfig from '../axiosConfig'
+import axios from 'axios'
 
 import '../css/styles.css'
 
@@ -12,16 +12,25 @@ export default function SelectionBar({ handleChange,  name, type }) {
 
     useEffect(() => {
         if(type === 'brand'){
-            axiosConfig.get('/vaccine_brand').then(res => {
+            axios
+            .get('http://localhost:5000')
+            .then(res => {
+              const url = 'http://' + res.data.data + ':5000/vaccine_brand'
+              axios.get(url).then(res => {
                 setElements([...res.data.vaccine_brand])
+            })
         })
-        
     }
     else if(type === 'vaccine'){
-        axiosConfig.get('/city_data').then(res => {
+        axios
+        .get('http://localhost:5000')
+        .then(res => {
+          const url = 'http://' + res.data.data + ':5000/city_data'
+          axios.get(url).then(res => {
             setElements([...res.data.city])
+        })
     })
-    }
+}
     else if(type === 'parties'){
         setElements(['the_greens', 'australian_labor_party', 'liberal', 'the_nationals'])
     }
