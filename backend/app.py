@@ -9,6 +9,7 @@ import json
 import uuid
 import fnmatch
 import configparser
+import os
 
 # read .ini file to get ips for db
 IN_FILE = 'config/instance_ips.ini'
@@ -42,11 +43,11 @@ os.system("curl -X POST -H "+'"Content-Type: application/json"'+
 
 
 server1_url = 'http://admin:couchdb@' + ip1 + ':5984'
-server2_url = 'http://admin:couchdb@' + ip2 + ':5984'
-# server3_url = 'http://admin:couchdb@' + ip3 + ':5984'
+#server2_url = 'http://admin:couchdb@' + ip2 + ':5984'
+#server3_url = 'http://admin:couchdb@' + ip3 + ':5984'
 
 server1 = Server(server1_url)
-server2 = Server(server2_url)
+#server2 = Server(server2_url)
 #server3 = Server(server2_url)
 
 
@@ -81,20 +82,24 @@ with open('grouped_election_data.json') as jsonfile:
 
 if 'twitter_data' in server1:
     branddb = server1['twitter_data']
-else: branddb = server1.create('brand_data')
+else: branddb = server1.create('twitter_data')
 
-if 'twitter_data' in server2:
-   vaccine = server2['twitter_data']
-else: vaccine = server2.create('vaccine_data')
+# if 'twitter_data' in server1:
+#     branddb = server3['twitter_data']
+# else: globaldb = server3.create('twitter_data')
+
+#if 'twitter_data' in server2:
+ #   vaccine = server2['twitter_data']
+#else: vaccine = server2.create('twitter_data')
 
 parties = server1['parties_data']
 
 try:
 
     # apply mapreduce functions to couchdb
-    with open('views/vaccine.json', 'r') as f:
-        vaccine.save(json.load(f))
-        f.close()
+    #with open('views/vaccine.json', 'r') as f:
+    # vaccine.save(json.load(f))
+    # f.close()
     with open('views/brand_view.json', 'r') as f:
         branddb.save(json.load(f))
         f.close()
