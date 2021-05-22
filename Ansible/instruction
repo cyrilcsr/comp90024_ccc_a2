@@ -95,11 +95,11 @@ sudo docker run -d --name couchdb \
   -p 5986:5986 \
   -p 4369:4369 \
   -p 9100-9200:9100-9200 \
-  -v /home/ubuntu/common/data:/opt/couchdb/data \
+  -v /home/ubuntu/data:/opt/couchdb/data \
   -e COUCHDB_USER='admin' \
   -e COUCHDB_PASSWORD='couchdb' \
   -e COUCHDB_SECRET='mysecret' \
-  -e NODENAME='172.26.131.7' \
+  -e NODENAME='172.26.129.88' \
   couchdb \
   -setcookie mycookie
 
@@ -109,10 +109,10 @@ test-server:172.26.131.7
 test2:172.26.130.118
 database:172.26.133.237
 
-curl http://admin:couchdb@localhost:5984/_membership
+curl http://admin:couchdb@172.26.133.8:5984/_membership
 
-curl -X PUT http://admin:couchdb@$172.26.131.7:5984/_nodes/couchdb@172.26.130.118 -d {}
-curl -X PUT http://admin:couchdb@$172.26.131.7:5984/_node/_local/_nodes/couchdb@172.26.130.118 -d {}
+curl -X PUT http://admin:couchdb@$172.26.131.7:5984/_nodes/172.26.131.85@172.26.131.85 -d {}
+curl -X PUT http://admin:couchdb@172.26.129.88:5984/_node/_local/_nodes/couchdb@172.26.130.118 -d {}
 
 curl -XPOST "http://admin:couchdb@172.26.131.7:5984/_cluster_setup"\
       --header "Content-Type: application/json"\
@@ -171,8 +171,10 @@ CMD ["python", "./backend/app.py"]
 
 ##docker bash
 move config folder under ccc-backend
-docker build -f Dockerfile -t ccc_backend:1.2 . --no-cache
+docker build -f Dockerfile -t ccc_backend:1.3 . --no-cache
 docker run -d -p 5000:5000 -v /home/ubuntu/config:/home/config --name backend ccc_backend:1.2
+docker image tag ccc_backend:1.3 cyrilcsr/ccc_backend:1.3
+
 docker images
 docker ps
 docker logs -f backend
@@ -204,12 +206,17 @@ CMD npm start
 
 
 ##docker bash
-docker build -f Dockerfile -t ccc_frontend:1.0 .
+docker build -f Dockerfile -t ccc_frontend:1.1 . --no-cache
+docker image tag ccc_frontend:1.1 cyrilcsr/ccc_frontend:1.1
 docker run -d -p 3000:3000 --name frontend ccc_frontend:1.0
 docker images
 docker ps
 docker logs -f backend
 
+
+###frontend readIP
+docker build -f Dockerfile -t ccc_frontend_node:1.0 . --no-cache
+docker image tag ccc_frontend_node:1.0 cyrilcsr/ccc_frontend_node:1.0
 
 ####Docker Help###
 docker images
@@ -239,3 +246,6 @@ docker push my-djnago-app:latest
 ####Docker-compose####
 docker-compose -f docker-backend.yml up -d
 docker-compose -f couchdb.yml up -d
+docker-compose -f docker-frontend-node.yml up -d
+docker-compose -f docker-frontend-app.yml up -d
+

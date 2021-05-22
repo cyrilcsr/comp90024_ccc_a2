@@ -108,7 +108,11 @@ export default class BrandLine extends Component {
         .get(nodeURL)
         .then(res => {
           const url = 'http://' + res.data.data + ':5000/brand_trend'
+<<<<<<< HEAD:frontend/webapp/src/components/BrandLine.jsx
+　　　　　console.log(url)
+=======
           console.log(url)
+>>>>>>> 2381db0e01b2c68027704d9ff7964e4e2f4c23d4:frontend/src/components/BrandLine.jsx
           axios
           .get(url, {
               params: {
