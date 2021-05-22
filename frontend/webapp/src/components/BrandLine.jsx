@@ -103,10 +103,12 @@ export default class BrandLine extends Component {
       }
       renderChart(){
         var nodeURL = `http://${window.location.hostname}:5000`
+        console.log(nodeURL)
         axios
         .get(nodeURL)
         .then(res => {
           const url = 'http://' + res.data.data + ':5000/brand_trend'
+　　　　　console.log(url)
           axios
           .get(url, {
               params: {

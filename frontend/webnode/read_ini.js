@@ -7,7 +7,7 @@ var cors = require('cors')
 const FILE = 'config/instance_ips.ini'
 
 var config = ini.parse(fs.readFileSync(FILE, 'utf-8'))
-const ServerObject = config.webserver
+const ServerObject = config.backend
 const ip = Object.keys(ServerObject)[0]
 
 const app = express()
