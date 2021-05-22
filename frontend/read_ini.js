@@ -16,4 +16,4 @@ app.get('/', (req, res) => {
     res.send({'data': ip})
 })
 
-var server = app.listen(port, () => console.log('server is running'));
+var server = app.listen(port, () => console.log('server is running'))
