@@ -9,6 +9,7 @@ import json
 import uuid
 import fnmatch
 import configparser
+import os
 
 # read .ini file to get ips for db
 IN_FILE = 'config/instance_ips.ini'
