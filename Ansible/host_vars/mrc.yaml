@@ -9,6 +9,8 @@ volumes:
     vol_size: 30
   - vol_name: webserver_vol
     vol_size: 30
+  - vol_name: backend_vol
+    vol_size: 100
   # - vol_name: database-vol-2-1
   #   vol_size: 30
   # - vol_name: database-vol-2-2
@@ -58,18 +60,30 @@ security_groups:
     port_range_min: 5000
     port_range_max: 5000
     remote_ip_prefix: 0.0.0.0/0
+  - name: frontend
+    description: "Open 3000 for frontend"
+    protocol: tcp
+    port_range_min: 3000
+    port_range_max: 3000
+    remote_ip_prefix: 0.0.0.0/0
 # Instance
 instances:
   - name: database1
     volumes: ['database-vol-1']
+    instance_flavor: uom.mse.1c4g
   - name: database2
     volumes: ['database-vol-2']
+    instance_flavor: uom.mse.1c4g
   - name: webserver
     volumes: ['webserver_vol']
+    instance_flavor: uom.mse.1c4g
+  - name: backend
+    volumes: ['backend_vol']
+    instance_flavor: uom.mse.2c9g
 
 instance_image: f8b79936-6616-4a22-b55d-0d0a1d27bceb
 instance_key_name: general
-instance_flavor: uom.mse.1c4g
+
 
 #test IPs
 # instance_ips: ['172.26.133.42', '172.26.129.211']

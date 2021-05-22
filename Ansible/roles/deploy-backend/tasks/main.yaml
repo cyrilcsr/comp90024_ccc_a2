@@ -1,0 +1,6 @@
+---
+- name: Create a hello-world container for testing
+  community.docker.docker_container:
+    name: docker
+    image: hello-world
+    state: started

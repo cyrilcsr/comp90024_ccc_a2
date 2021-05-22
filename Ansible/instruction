@@ -142,13 +142,7 @@ CMD ["python", "./myapps/test.py"]
 #build
 docker build -f Dockerfile -t docker_test:1.0 .
 
-#distribute docker Images
-docker login
 
-docker image tag [imageName] [username]/[repository]:[tag]
-docker image build -t [username]/[repository]:[tag] .
-
-docker image push [username]/[repository]:[tag]
 
 FROM node:14
 RUN npm install
@@ -159,7 +153,7 @@ RUN npm install
 ccc-backend
 ├── Dockerfile
 ├── backend (copy from github)
-|── config (copy from /home/ubuntu/config)
+├── config (copy from /home/ubuntu/config)
 └── requirements.txt (flask,couchdb,flask_cors)
 
 ##Dockerfile
@@ -177,8 +171,8 @@ CMD ["python", "./backend/app.py"]
 
 ##docker bash
 move config folder under ccc-backend
-docker build -f Dockerfile -t ccc_backend:1.10 .
-docker run -d -p 5000:5000 --name backend ccc_backend:1.10
+docker build -f Dockerfile -t ccc_backend:1.2 . --no-cache
+docker run -d -p 5000:5000 -v /home/ubuntu/config:/home/config --name backend ccc_backend:1.2
 docker images
 docker ps
 docker logs -f backend
@@ -188,6 +182,33 @@ docker exec -it backend /bin/bash
 
 
 ####Dcoker frontend####
+ccc-frontend
+├── Dockerfile
+├── public  README.md  src
+├── (?)config (copy from /home/ubuntu/config)
+└── package.json  package-lock.json
+
+##Dockerfile
+FROM node:12.17
+ENV HTTP_PROXY=http://wwwproxy.unimelb.edu.au:8000/
+ENV HTTPS_PROXY=http://wwwproxy.unimelb.edu.au:8000/
+ENV http_proxy=http://wwwproxy.unimelb.edu.au:8000/
+ENV https_proxy=http://wwwproxy.unimelb.edu.au:8000/
+ENV no_proxy=localhost,127.0.0.1,localaddress,172.16.0.0/12,.melbourne.rc.nectar.org.au,.storage.unimelb.edu.au,.cloud.unimelb.edu.au
+# Create app directory
+WORKDIR /home
+ADD . .
+RUN npm install
+CMD npm start
+
+
+
+##docker bash
+docker build -f Dockerfile -t ccc_frontend:1.0 .
+docker run -d -p 3000:3000 --name frontend ccc_frontend:1.0
+docker images
+docker ps
+docker logs -f backend
 
 
 ####Docker Help###
@@ -196,4 +217,25 @@ docker logs -f backend
 docker exec -it my-couchdb /bin/bash
 
 
+##distribute docker Images
+docker login
+
+docker image tag [imageName] [username]/[repository]:[tag]
+docker image build -t [username]/[repository]:[tag] .
+
+docker image push [username]/[repository]:[tag]
+
+docker image tag ccc_backend:1.2 cyrilcsr/ccc_backend:1.2
+docker image push cyrilcsr/ccc_backend:1.2
 docker run -d -p 5000:5000 --name backend ccc_backend:1.2
+
+# Remove image layer
+docker rmi --force 'image id'
+docker rmi --force my-djnago-app:latest
+docker build -t my-djnago-app:latest . --no-cache
+docker push my-djnago-app:latest
+
+
+####Docker-compose####
+docker-compose -f docker-backend.yml up -d
+docker-compose -f couchdb.yml up -d
