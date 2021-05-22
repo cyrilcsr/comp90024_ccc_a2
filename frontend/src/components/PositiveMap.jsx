@@ -30,9 +30,9 @@ const PositveMap = ({ onClick }) => {
     map.on("load", () => {
       setMap(map);
       map.resize();
-
+      var nodeURL = `http://${window.location.hostname}:5000`
       axios
-      .get('http://localhost:5000')
+      .get(nodeURL)
       .then(res => {
         const url = 'http://' + res.data.data + ':5000/total_num_tweet/'
         axios
