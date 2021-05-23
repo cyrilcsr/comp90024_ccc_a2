@@ -1,5 +1,5 @@
 from tweepy import OAuthHandler, Stream, StreamListener
-import twitterCredential, time, json, re
+import twitterCredential, time, json, couchdb
 from urllib3.exceptions import ProtocolError
 from http.client import IncompleteRead as http_incompleteRead
 from urllib3.exceptions import IncompleteRead as urllib3_incompleteRead
@@ -85,10 +85,8 @@ def processData(data):
             break
 
     data_dict["vaccine_brand"] = brand
-    # db.save(data_dict)
     json_object = json.dumps(data_dict)
-    streamDataFile = open("streamRecord.json", 'a', encoding="utf-8")
-    streamDataFile.write(str(json_object) + "\n")
+    return json_object
 
 class StdOutListener(StreamListener):
     """ A listener handles tweets that are received from the stream.
@@ -97,7 +95,10 @@ class StdOutListener(StreamListener):
 
     def on_data(self, data):
         try:
-            processData(data)
+            processedData = processData(data)
+            couch = couchdb.Server("http://admin:couchdb@localhost:5984")
+            db = couch['vaccine']
+            db.save(processedData)
 
         except http_incompleteRead as e:
             print("http incompleteRead error: %s" % str(e))

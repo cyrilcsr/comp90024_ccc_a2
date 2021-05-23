@@ -1,9 +1,9 @@
 version: '3.7'
 
 services:
-   backend:
-     image: cyrilcsr/ccc_backend:1.3
-     container_name: backend
+  frontend-node:
+     image: cyrilcsr/ccc_frontend_node:1.0
+     container_name: frontend_node
      volumes:
        - /home/ubuntu/config:/home/config
      ports:

@@ -43,10 +43,10 @@ security_groups:
     port_range_max: 5984
     remote_ip_prefix: 0.0.0.0/0
   - name: CouchDB_communication
-    description: "Open 4396 port for DB nodes communication"
+    description: "Open 4369 port for DB nodes communication"
     protocol: tcp
-    port_range_min: 4396
-    port_range_max: 4396
+    port_range_min: 4369
+    port_range_max: 4369
     remote_ip_prefix: 0.0.0.0/0
   - name: CouchDB_nodes
     description: "Open 9100-9200 for DB nodes"
