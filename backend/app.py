@@ -41,73 +41,71 @@ os.system("curl -X POST -H "+'"Content-Type: application/json"'+
 os.system("curl -X POST -H "+'"Content-Type: application/json"'+
             " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+'{"action": "finish_cluster"}'+"'")
 
+def set_up(server):
+    # Upload aurin data to couchdb
+    if not 'parties_data' in server:
+        db = server.create('parties_data')
+    else: db = server['parties_data']
+
+    with open('grouped_election_data.json') as jsonfile:
+        data = json.load(jsonfile)
+        jsonfile.close()
+        result = {}
+
+        feature_list = data['features']
+
+        for row in feature_list:
+            data = json.loads(json.dumps(row))
+            coordinate = str(data['geometry']['coordinates']) # _id has to be a string
+            property_dict = {i:j for i,j in data['properties'].items() if j != None} # take out null
+            pattern = '*_percent'
+            doc = {}
+            for item in property_dict:
+                if fnmatch.fnmatch(item, pattern):
+                    party_name = item.replace('_percent', '')
+                    doc[party_name] = property_dict[item]
+                else: doc[item] = property_dict[item]
+            result[coordinate] = doc
+
+        print('start uploading data')
+        for d in result:
+            if d not in db: db[d] = result[d]
+
+    # creates/connects to docs
+    if 'brand' in server:
+        branddb = server['brand']
+    else: branddb = server.create('brand')
+
+    if 'vaccine' in server:
+        vaccine = server['vaccine']
+    else: vaccine = server.create('vaccine')
+
+    parties = server['parties_data']
+
+    # apply mapreduce functions to couchdb
+    try:
+        with open('views/vaccine.json', 'r') as f:
+            vaccine.save(json.load(f))
+            f.close()
+        with open('views/brand_view.json', 'r') as f:
+            branddb.save(json.load(f))
+            f.close()
+        with open('views/parties_views.json', 'r') as f:
+            parties.save(json.load(f))
+            f.close()
+    except: 
+        print('Conflict occured')
+
+    return branddb, vaccine, parties
 
 server1_url = 'http://admin:couchdb@' + ip1 + ':5984'
 #server2_url = 'http://admin:couchdb@' + ip2 + ':5984'
 #server3_url = 'http://admin:couchdb@' + ip3 + ':5984'
 
 server1 = Server(server1_url)
+branddb, vaccine, parties = set_up(server1)
 #server2 = Server(server2_url)
 #server3 = Server(server2_url)
-
-
-# Upload aurin data to couchdb
-if not 'parties_data' in server1:
-    db = server1.create('parties_data')
-else: db = server1['parties_data']
-
-with open('grouped_election_data.json') as jsonfile:
-    data = json.load(jsonfile)
-    jsonfile.close()
-    result = {}
-
-    feature_list = data['features']
-
-    for row in feature_list:
-        data = json.loads(json.dumps(row))
-        coordinate = str(data['geometry']['coordinates']) # _id has to be a string
-        property_dict = {i:j for i,j in data['properties'].items() if j != None} # take out null
-        pattern = '*_percent'
-        doc = {}
-        for item in property_dict:
-            if fnmatch.fnmatch(item, pattern):
-                party_name = item.replace('_percent', '')
-                doc[party_name] = property_dict[item]
-            else: doc[item] = property_dict[item]
-        result[coordinate] = doc
-
-    print('start uploading data')
-    for d in result:
-        if d not in db: db[d] = result[d]
-
-if 'twitter_data' in server1:
-    branddb = server1['twitter_data']
-else: branddb = server1.create('twitter_data')
-
-# if 'twitter_data' in server1:
-#     branddb = server3['twitter_data']
-# else: globaldb = server3.create('twitter_data')
-
-#if 'twitter_data' in server2:
- #   vaccine = server2['twitter_data']
-#else: vaccine = server2.create('twitter_data')
-
-parties = server1['parties_data']
-
-try:
-
-    # apply mapreduce functions to couchdb
-    #with open('views/vaccine.json', 'r') as f:
-    # vaccine.save(json.load(f))
-    # f.close()
-    with open('views/brand_view.json', 'r') as f:
-        branddb.save(json.load(f))
-        f.close()
-    with open('views/parties_views.json', 'r') as f:
-        parties.save(json.load(f))
-        f.close()
-except: 
-    print('Conflict occured')
 
 
 app = Flask(__name__)
