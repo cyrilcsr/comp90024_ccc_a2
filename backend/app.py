@@ -20,25 +20,25 @@ beip, _ = config.items('backend')[0]
 db_list = [ip1,ip2,ip3]
 db_list.remove(beip)
 
-# os.system("curl -X POST -H "+'"Content-Type: application/json"'+
-#       " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
-#       '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"couchdb", "node_count":"3"}'+"'")
-# os.system("curl -X POST -H "+'"Content-Type: application/json"'+
-#             " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
-#             '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"couchdb", '
-#             '"port": 5984, "node_count": "3", "remote_node": "'+db_list[0]+'", "remote_current_user": "admin", "remote_current_password": "couchdb"}'+"'")
-# os.system("curl -X POST -H "+'"Content-Type: application/json"'+
-#             " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
-#             '{"action": "add_node", "host":"'+db_list[0]+'", "port": "5984", "username": "admin", "password":"couchdb"}'+"'")
-# os.system("curl -X POST -H "+'"Content-Type: application/json"'+
-#             " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
-#             '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"couchdb", '
-#             '"port": 5984, "node_count": "3", "remote_node": "'+db_list[1]+'", "remote_current_user": "admin", "remote_current_password": "couchdb" }'+"'")
-# os.system("curl -X POST -H "+'"Content-Type: application/json"'+
-#             " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
-#             '{"action": "add_node", "host":"'+db_list[1]+'", "port": "5984", "username": "admin", "password":"couchdb"}'+"'")
-# os.system("curl -X POST -H "+'"Content-Type: application/json"'+
-#             " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+'{"action": "finish_cluster"}'+"'")
+os.system("curl -X POST -H "+'"Content-Type: application/json"'+
+      " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
+      '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"couchdb", "node_count":"3"}'+"'")
+os.system("curl -X POST -H "+'"Content-Type: application/json"'+
+            " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
+            '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"couchdb", '
+            '"port": 5984, "node_count": "3", "remote_node": "'+db_list[0]+'", "remote_current_user": "admin", "remote_current_password": "couchdb"}'+"'")
+os.system("curl -X POST -H "+'"Content-Type: application/json"'+
+            " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
+            '{"action": "add_node", "host":"'+db_list[0]+'", "port": "5984", "username": "admin", "password":"couchdb"}'+"'")
+os.system("curl -X POST -H "+'"Content-Type: application/json"'+
+            " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
+            '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"couchdb", '
+            '"port": 5984, "node_count": "3", "remote_node": "'+db_list[1]+'", "remote_current_user": "admin", "remote_current_password": "couchdb" }'+"'")
+os.system("curl -X POST -H "+'"Content-Type: application/json"'+
+            " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
+            '{"action": "add_node", "host":"'+db_list[1]+'", "port": "5984", "username": "admin", "password":"couchdb"}'+"'")
+os.system("curl -X POST -H "+'"Content-Type: application/json"'+
+            " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+'{"action": "finish_cluster"}'+"'")
 
 def set_up(server):
     # create/connect to parties doc
@@ -118,7 +118,7 @@ server2 = Server(server2_url)
 server3 = Server(server2_url)
 
 try:
-    globaldb, branddb, vaccine, parties = set_up(Server(temp_url))
+    globaldb, branddb, vaccine, parties = set_up(server1)
 except:
     print('switching to server 2')
     try:
