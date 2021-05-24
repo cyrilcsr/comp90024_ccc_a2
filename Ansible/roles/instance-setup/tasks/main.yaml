@@ -59,11 +59,11 @@
     state: directory
     mode: '0755'
 
-- name: Create a ext4 filesystem on /dev/vdb
-  become: yes
-  community.general.filesystem:
-    fstype: ext4
-    dev: /dev/vdb
+# - name: Create a ext4 filesystem on /dev/vdb
+#   become: yes
+#   community.general.filesystem:
+#     fstype: ext4
+#     dev: /dev/vdb
     # opts: -cc
 
 - name: Mount up device by label

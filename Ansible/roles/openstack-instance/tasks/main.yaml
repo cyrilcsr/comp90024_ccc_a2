@@ -58,6 +58,20 @@
   loop: '{{ os_instance.results }}'
   when: item.openstack.name is match("backend")
 
+- name: Add host - Vaccine harvester
+  add_host:
+    name: '{{ item.openstack.public_v4 }}'
+    groups: database1
+  loop: '{{ os_instance.results }}'
+  when: item.openstack.name is match("database1")
+
+- name: Add host - Brand harvester
+  add_host:
+    name: '{{ item.openstack.public_v4 }}'
+    groups: database2
+  loop: '{{ os_instance.results }}'
+  when: item.openstack.name is match("database2")
+
 - name: create file
   template:
     src: hosts-list.j2

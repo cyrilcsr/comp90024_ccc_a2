@@ -70,10 +70,10 @@ security_groups:
 instances:
   - name: database1
     volumes: ['database-vol-1']
-    instance_flavor: uom.mse.1c4g
+    instance_flavor: uom.mse.2c9g
   - name: database2
     volumes: ['database-vol-2']
-    instance_flavor: uom.mse.1c4g
+    instance_flavor: uom.mse.2c9g
   - name: webserver
     volumes: ['webserver_vol']
     instance_flavor: uom.mse.1c4g

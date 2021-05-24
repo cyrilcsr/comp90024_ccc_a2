@@ -1,0 +1,35 @@
+---
+- name: Deploy frontend services
+  community.docker.docker_compose:
+    project_name: frontend
+    definition:
+      version: '3.7'
+      services:
+        frontend-node:
+          image: cyrilcsr/ccc_frontend_node:1.0
+          container_name: frontend_node
+          volumes:
+            - /home/ubuntu/config:/home/config
+          ports:
+            - "5000:5000"
+          restart: always
+        frontend-app:
+          image: cyrilcsr/ccc_frontend:1.2
+          container_name: frontend
+          volumes:
+            - /home/ubuntu/config:/home/config
+          ports:
+            - "3000:3000"
+          restart: always
+          depends_on:
+            - frontend-node
+
+  # register: output
+
+  # ansible.builtin.debug:
+  #   var: output
+
+  # ansible.builtin.assert:
+  #   that:
+  #     - "web.flask_web_1.state.running"
+  #     - "db.flask_db_1.state.running"

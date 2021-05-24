@@ -1,6 +1,15 @@
 ---
-- name: Create a hello-world container for testing
-  community.docker.docker_container:
-    name: docker
-    image: hello-world
-    state: started
+- name: Deploy frontend services
+  community.docker.docker_compose:
+    project_name: backend
+    definition:
+      version: '3.7'
+      services:
+        backend:
+          image: cyrilcsr/ccc_backend:1.4
+          container_name: backend
+          volumes:
+            - /home/ubuntu/config:/home/config
+          ports:
+            - "5000:5000"
+          restart: always

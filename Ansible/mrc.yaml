@@ -24,6 +24,15 @@
   roles:
     - role: instance-setup
 
+- hosts: database
+  remote_user: '{{ remote_username }}'
+  vars_files:
+    - host_vars/mrc.yaml
+  gather_facts: true
+
+  roles:
+    - role: deploy-couchdb
+
 - hosts: backend
   remote_user: '{{ remote_username }}'
   vars_files:
@@ -32,3 +41,12 @@
 
   roles:
     - role: deploy-backend
+
+- hosts: webserver
+  remote_user: '{{ remote_username }}'
+  vars_files:
+    - host_vars/mrc.yaml
+  gather_facts: true
+
+  roles:
+    - role: deploy-frontend
