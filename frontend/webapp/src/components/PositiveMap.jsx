@@ -30,12 +30,7 @@ const PositveMap = ({ onClick }) => {
     map.on("load", () => {
       setMap(map);
       map.resize();
-<<<<<<< HEAD:frontend/webapp/src/components/PositiveMap.jsx
-
-      var nodeURL = `http://${window.location.hostname}:5000`
-=======
       var nodeURL = `http://${window.location.hostname}:5000`
->>>>>>> 2381db0e01b2c68027704d9ff7964e4e2f4c23d4:frontend/src/components/PositiveMap.jsx
       axios
       .get(nodeURL)
       .then(res => {

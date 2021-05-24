@@ -42,47 +42,55 @@ os.system("curl -X POST -H "+'"Content-Type: application/json"'+
             " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+'{"action": "finish_cluster"}'+"'")
 
 def set_up(server):
-    # Upload aurin data to couchdb
+    # create/connect to parties doc
     if not 'parties_data' in server:
-        db = server.create('parties_data')
-    else: db = server['parties_data']
+        parties = server.create('parties_data')
+    else:
+        parties = server['parties_data']
 
-    with open('grouped_election_data.json') as jsonfile:
-        data = json.load(jsonfile)
-        jsonfile.close()
-        result = {}
+    # if we do not have enough data in docs, upload
+    if parties.info()['doc_count'] < 7000:
+        with open('grouped_election_data.json') as jsonfile:
+                data = json.load(jsonfile)
+                jsonfile.close()
+                result = {}
 
-        feature_list = data['features']
+                feature_list = data['features']
 
-        for row in feature_list:
-            data = json.loads(json.dumps(row))
-            coordinate = str(data['geometry']['coordinates']) # _id has to be a string
-            property_dict = {i:j for i,j in data['properties'].items() if j != None} # take out null
-            pattern = '*_percent'
-            doc = {}
-            for item in property_dict:
-                if fnmatch.fnmatch(item, pattern):
-                    party_name = item.replace('_percent', '')
-                    doc[party_name] = property_dict[item]
-                else: doc[item] = property_dict[item]
-            result[coordinate] = doc
+                for row in feature_list:
+                    data = json.loads(json.dumps(row))
+                    coordinate = str(data['geometry']['coordinates']) # _id has to be a string
+                    property_dict = {i:j for i,j in data['properties'].items() if j != None} # take out null
+                    pattern = '*_percent'
+                    doc = {}
+                    for item in property_dict:
+                        if fnmatch.fnmatch(item, pattern):
+                            party_name = item.replace('_percent', '')
+                            doc[party_name] = property_dict[item]
+                        else: doc[item] = property_dict[item]
+                    result[coordinate] = doc
 
-        print('start uploading data')
-        for d in result:
-            if d not in db: db[d] = result[d]
+                print('start uploading data')
+                for d in result:
+                    if d not in db: db[d] = result[d]
 
-    # creates/connects to docs
+    # create/connect to other docs
     if 'brand' in server:
         branddb = server['brand']
-    else: branddb = server.create('brand')
+    else: 
+        branddb = server.create('brand')
 
     if 'vaccine' in server:
         vaccine = server['vaccine']
-    else: vaccine = server.create('vaccine')
+    else: 
+        vaccine = server.create('vaccine')
 
-    parties = server['parties_data']
+    if 'global' in server:
+        globaldb = server['global']
+    else: 
+        globaldb = server.create('global')
 
-    # apply mapreduce functions to couchdb
+    # apply mapreduce functions to docs
     try:
         with open('views/vaccine.json', 'r') as f:
             vaccine.save(json.load(f))
@@ -90,23 +98,34 @@ def set_up(server):
         with open('views/brand_view.json', 'r') as f:
             branddb.save(json.load(f))
             f.close()
+        with open('views/global_view.json', 'r') as f:
+            globaldb.save(json.load(f))
+            f.close()
         with open('views/parties_views.json', 'r') as f:
             parties.save(json.load(f))
             f.close()
     except: 
         print('Conflict occured')
 
-    return branddb, vaccine, parties
+    return globaldb, branddb, vaccine, parties
 
 server1_url = 'http://admin:couchdb@' + ip1 + ':5984'
-#server2_url = 'http://admin:couchdb@' + ip2 + ':5984'
-#server3_url = 'http://admin:couchdb@' + ip3 + ':5984'
+server2_url = 'http://admin:couchdb@' + ip2 + ':5984'
+server3_url = 'http://admin:couchdb@' + ip3 + ':5984'
 
 server1 = Server(server1_url)
-branddb, vaccine, parties = set_up(server1)
-#server2 = Server(server2_url)
-#server3 = Server(server2_url)
+server2 = Server(server2_url)
+server3 = Server(server2_url)
 
+try:
+    globaldb, branddb, vaccine, parties = set_up(server1)
+except:
+    print('switching to server 2')
+    try:
+        globaldb, branddb, vaccine, parties = set_up(server2)
+    except:
+        print('switching to server 3')
+        globaldb, branddb, vaccine, parties = set_up(server3)
 
 app = Flask(__name__)
 CORS(app)
@@ -179,11 +198,23 @@ def vaccine_trend():
 
             if(row.key[1] == 'pos'): 
                 data[row.key[0]]['pos'] = row.value
-            elif(row.key[1] == 'neg'): 
+            else: 
                 data[row.key[0]]['neg'] = row.value
 
             data[row.key[0]]['total'] = data[row.key[0]]['pos'] + data[row.key[0]]['neg']
-    
+
+    if location == 'global':
+        for row in list(globaldb.view('mapviews/sentiment', group=True)):
+            if row.key[0] not in data:
+                data[row.key[0]] = {'pos': 0, 'neg': 0, 'total': 0}
+                
+            if row.key[1] == 'pos':
+                data[row.key[0]]['pos'] = row.value
+            else:
+                data[row.key[0]]['neg'] = row.value
+
+            data[row.key[0]]['total'] = data[row.key[0]]['pos'] + data[row.key[0]]['neg']
+
     return jsonify(data)
 
 
@@ -211,7 +242,7 @@ def total_num_tweet():
     data = {}
     data['total'] = build_dic()
 
-    for row in list(vaccine.view('mapviews/sentiment_distribution', group=True)):
+    for row in list(vaccine.view('mapviews/vaccine_sentiment', group=True)):
         if(is_rural(row.key[0])): key = 'RuralArea'
         elif(param == 'sum'): key = 'city'
         else: key = row.key[0]
@@ -221,13 +252,13 @@ def total_num_tweet():
         data[key]['total_tweet'] += row.value
         data['total']['total_tweet'] += row.value
 
-        if(row.key[1] > 0): 
+        if(row.key[1] == 'pos'): 
             data[key]['pos_tweet'] += row.value
             data['total']['pos_tweet'] += row.value
-        elif(row.key[1] < 0):
+        elif(row.key[1] == 'neg'):
             data['total']['neg_tweet'] += row.value
             data[key]['neg_tweet'] += row.value
-        elif(row.key[1] == 0):  
+        elif(row.key[1] == 'neutral'):  
             data[key]['neutral_tweet'] += row.value
             data['total']['neutral_tweet'] += row.value
 
@@ -385,36 +416,6 @@ def city_data():
 
     return jsonify(response)
 
-@app.route('/brand_stat/')
-def brand_stat():
-    data = {}
-
-    for row in list(branddb.view('mapviews/brand_view', group=True)):
-        if row.key[0] not in data: 
-            data[row.key[0]] = []
-        pos_tweet, neg_tweet, neutral_tweet, total = 0, 0, 0, 0
-        if row.key[2] == 'pos': 
-            pos_tweet = row.value
-        elif row.key[2] == 'neg': 
-            neg_tweet = row.value
-        else: 
-            neutral_tweet = row.value
-
-        total = pos_tweet + neg_tweet + neutral_tweet
-
-        stat_row = [row.key[1], total, pos_tweet, neg_tweet, neutral_tweet]
-        data[row.key[0]].append(stat_row)
-
-    for row in list(branddb.view('mapviews/brand_sentiment', group=True)):
-        stats = data[row.key[0]]
-        for stat in stats:
-            if stat[0] == row.key[1]: stat.append(row.value)
-    
-    return jsonify({
-        'code': 200,
-        'structure': ['date', 'total_tweet', 'pos_tweet', 'neg_tweet', 'neutral_tweet', 'sentiment_score'],
-        'data': data
-    })
 
 @app.route('/political_party/')
 def political_party():
@@ -467,6 +468,7 @@ def political_party_per_area():
     }
     
     return jsonify(data)
+
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')

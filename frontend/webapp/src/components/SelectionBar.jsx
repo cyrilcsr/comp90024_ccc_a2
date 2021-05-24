@@ -28,7 +28,7 @@ export default function SelectionBar({ handleChange,  name, type }) {
         .then(res => {
           const url = 'http://' + res.data.data + ':5000/city_data'
           axios.get(url).then(res => {
-            setElements([...res.data.city])
+            setElements([...res.data.city, 'global'])
         })
     })
 }

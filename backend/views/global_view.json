@@ -1,0 +1,10 @@
+{
+    "_id": "_design/mapviews",
+    "language": "javascript",
+    "views": {
+        "sentiment": {
+            "map": "function(doc) { var flag = doc.sentiment_score > 0 ? 'pos' : 'others'; emit([doc.created_at, flag], 1) }",
+            "reduce": "_count"
+        }
+    }
+  }

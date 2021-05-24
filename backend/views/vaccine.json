@@ -22,8 +22,8 @@
             "map": "function(doc){ if(doc.city !== 'Australia') { emit(doc.city, doc.sentiment_score) } }",
             "reduce": "_sum"
         },
-        "sentiment_distribution": {
-            "map": "function(doc){ if(doc.city !== 'Australia') { emit([doc.city, doc.sentiment_score], 1) } }",
+        "vaccine_sentiment": {
+            "map": "function(doc){ if(doc.city !== 'Australia') { var flag = doc.sentiment_score > 0 ? 'pos' : doc.sentiment_score < 0 ? 'neg' : 'neutral'; emit([doc.city, flag], 1) } }",
             "reduce": "_count"
         },
         "city_count": {
