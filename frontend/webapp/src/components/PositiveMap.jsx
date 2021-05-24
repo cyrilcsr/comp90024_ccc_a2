@@ -86,6 +86,7 @@ const PositveMap = ({ onClick }) => {
             return `
             <div style="text-align: center;"><p style="font-size: 18px; margin-bottom: 0;">${ele.name}</p></div>
             <div><strong>support raio </strong>: ${100 * (ele.pos_tweet / ele.total_tweet).toPrecision(2)}%</div>
+            <div><strong># of tweets </strong>: ${ele.total_tweet}</div>
             `
           }
   
