@@ -23,11 +23,13 @@ export default function SelectionBar({ handleChange,  name, type }) {
         })
     }
     else if(type === 'vaccine'){
+        nodeURL = `http://${window.location.hostname}:5000`
         axios
         .get(nodeURL)
         .then(res => {
           const url = 'http://' + res.data.data + ':5000/city_data'
           axios.get(url).then(res => {
+            console.log(res.data.city)
             setElements([...res.data.city, 'Global'])
         })
     })

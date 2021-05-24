@@ -27,7 +27,6 @@ afinn = read_score()
 
 def processData(data):
     data = json.loads(data)
-    print(data)
     data_dict = {"id": data["id"]}
 
     date = data["created_at"].split()
@@ -85,8 +84,7 @@ def processData(data):
             break
 
     data_dict["vaccine_brand"] = brand
-    json_object = json.dumps(data_dict)
-    return json_object
+    return data_dict
 
 class StdOutListener(StreamListener):
     """ A listener handles tweets that are received from the stream.
@@ -96,9 +94,12 @@ class StdOutListener(StreamListener):
     def on_data(self, data):
         try:
             processedData = processData(data)
-            couch = couchdb.Server("http://admin:couchdb@localhost:5984")
-            db = couch['vaccine']
-            db.save(processedData)
+            if ("vaccine" in processedData["text"]):
+                print("get one tweet")
+                couch = couchdb.Server("http://admin:couchdb@localhost:5984")
+                db = couch['vaccine']
+                if str(processedData["id"]) not in db:
+                	db[str(processedData["id"])] = processedData
 
         except http_incompleteRead as e:
             print("http incompleteRead error: %s" % str(e))
