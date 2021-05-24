@@ -26,6 +26,10 @@
             "map": "function(doc){ if(doc.city !== 'Australia') { var flag = doc.sentiment_score > 0 ? 'pos' : doc.sentiment_score < 0 ? 'neg' : 'neutral'; emit([doc.city, flag], 1) } }",
             "reduce": "_count"
         },
+        "sentiment_distribution": {
+            "map": "function(doc){ if(doc.city !== 'Australia') { emit([doc.city, doc.sentiment_score], 1) } }",
+            "reduce": "_count"
+        },
         "city_count": {
             "map": "function(doc){ if(doc.city !== 'Australia'){ emit(doc.city, 1) } }",
             "reduce": "_count"

@@ -26,7 +26,6 @@ export default class PositivePieLeft extends Component {
               },
               labels: ['Support', 'Neutral or Not Support'],
               chart: {
-                width: 35,
                 type: 'pie'
               },
               colors:['#fbb03b', '#3e3c3c'],
@@ -49,22 +48,17 @@ export default class PositivePieLeft extends Component {
       }
     
     renderChart(){
-      var nodeURL = `http://${window.location.hostname}:5000`
-      axios
-      .get(nodeURL)
-      .then(res => {
-          const url = 'http://' + res.data.data + ':5000/positive_per_city/'
-          axios
-          .get(url, {
-              params: {
-                  city: this.state.city
-              }
-          })
-          .then(res => {
-            const data = res.data
-            this.setState({
-                series: [data.positive, data.others]
-            })
+        const url = 'http://127.0.0.1:5000/positive_per_city/'
+        axios
+        .get(url, {
+            params: {
+                city: this.state.city
+            }
+        })
+        .then(res => {
+          const data = res.data
+          this.setState({
+              series: [data.positive, data.others]
           })
         })
     }
@@ -85,7 +79,7 @@ export default class PositivePieLeft extends Component {
         return (
             <div className='pos-pie-chart'>
                 <SelectionBar handleChange={this.handleChange} name={this.state.city} type='vaccine'/>
-                <Chart type="pie" series={this.state.series} options={this.state.options} className='positive-chart'/>
+                <Chart type="pie" width={350} series={this.state.series} options={this.state.options} className='positive-chart'/>
           </div>
         )
     }

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import PoliticalPartyMap from '../../components/PoliticalPartyMap'
 import CityPositivePie from '../../components/CityPositivePie'
+import CorrelationBar from '../../components/CorrelationBar'
 import Nav from '../../components/Nav'
 
 import '../css/Scenarios.css'
@@ -19,11 +20,12 @@ export default class Scenario3 extends Component {
         return (
             <div className='scenario'>
                 <Nav />
-                <div class="parent">
-                    <div class="div1"> <h3 className='scenario-title'>Political Party Support Rate & Vaccination Support Rate</h3> </div>
-                    <div class="div2"> <PoliticalPartyMap className='election-map'/></div>
+                <div className="parent">
+                    <div className="div1"> <h3 className='scenario-title'>Political Party Support Rate & Vaccination Support Rate</h3> </div>
+                    <div className="div2"> <PoliticalPartyMap className='election-map'/></div>
                     <div className="div3">  
-                        <CityPositivePie/> 
+                        <CityPositivePie className='positive-pie'/> 
+                        <CorrelationBar className='coorelation'/>
                     </div>
                 </div>
             </div>

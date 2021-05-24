@@ -21,25 +21,25 @@ db_list = [ip1,ip2,ip3]
 db_list.remove(beip)
 
 
-os.system("curl -X POST -H "+'"Content-Type: application/json"'+
-      " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
-      '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"couchdb", "node_count":"3"}'+"'")
-os.system("curl -X POST -H "+'"Content-Type: application/json"'+
-            " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
-            '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"couchdb", '
-            '"port": 5984, "node_count": "3", "remote_node": "'+db_list[0]+'", "remote_current_user": "admin", "remote_current_password": "couchdb"}'+"'")
-os.system("curl -X POST -H "+'"Content-Type: application/json"'+
-            " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
-            '{"action": "add_node", "host":"'+db_list[0]+'", "port": "5984", "username": "admin", "password":"couchdb"}'+"'")
-os.system("curl -X POST -H "+'"Content-Type: application/json"'+
-            " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
-            '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"couchdb", '
-            '"port": 5984, "node_count": "3", "remote_node": "'+db_list[1]+'", "remote_current_user": "admin", "remote_current_password": "couchdb" }'+"'")
-os.system("curl -X POST -H "+'"Content-Type: application/json"'+
-            " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
-            '{"action": "add_node", "host":"'+db_list[1]+'", "port": "5984", "username": "admin", "password":"couchdb"}'+"'")
-os.system("curl -X POST -H "+'"Content-Type: application/json"'+
-            " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+'{"action": "finish_cluster"}'+"'")
+# os.system("curl -X POST -H "+'"Content-Type: application/json"'+
+#       " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
+#       '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"couchdb", "node_count":"3"}'+"'")
+# os.system("curl -X POST -H "+'"Content-Type: application/json"'+
+#             " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
+#             '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"couchdb", '
+#             '"port": 5984, "node_count": "3", "remote_node": "'+db_list[0]+'", "remote_current_user": "admin", "remote_current_password": "couchdb"}'+"'")
+# os.system("curl -X POST -H "+'"Content-Type: application/json"'+
+#             " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
+#             '{"action": "add_node", "host":"'+db_list[0]+'", "port": "5984", "username": "admin", "password":"couchdb"}'+"'")
+# os.system("curl -X POST -H "+'"Content-Type: application/json"'+
+#             " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
+#             '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"couchdb", '
+#             '"port": 5984, "node_count": "3", "remote_node": "'+db_list[1]+'", "remote_current_user": "admin", "remote_current_password": "couchdb" }'+"'")
+# os.system("curl -X POST -H "+'"Content-Type: application/json"'+
+#             " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
+#             '{"action": "add_node", "host":"'+db_list[1]+'", "port": "5984", "username": "admin", "password":"couchdb"}'+"'")
+# os.system("curl -X POST -H "+'"Content-Type: application/json"'+
+#             " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+'{"action": "finish_cluster"}'+"'")
 
 def set_up(server):
     # create/connect to parties doc
@@ -112,13 +112,13 @@ def set_up(server):
 server1_url = 'http://admin:couchdb@' + ip1 + ':5984'
 server2_url = 'http://admin:couchdb@' + ip2 + ':5984'
 server3_url = 'http://admin:couchdb@' + ip3 + ':5984'
-
+temp_url = 'http://admin:couchdb@172.26.128.224:5984'
 server1 = Server(server1_url)
 server2 = Server(server2_url)
 server3 = Server(server2_url)
 
 try:
-    globaldb, branddb, vaccine, parties = set_up(server1)
+    globaldb, branddb, vaccine, parties = set_up(Server(temp_url))
 except:
     print('switching to server 2')
     try:
@@ -163,14 +163,14 @@ def num_tweet_city():
     param = request.args.get('option')
     data = build_dic()
 
-    for row in list(vaccine.view('mapviews/sentiment_distribution', group=True)):
+    for row in list(vaccine.view('mapviews/vaccine_sentiment', group=True)):
         if(param == row.key[0]):
             data['total_tweet'] += row.value
-            if(row.key[1] > 0): 
+            if(row.key[1] == 'pos'): 
                 data['pos_tweet'] += row.value
-            elif(row.key[1] < 0): 
+            elif(row.key[1] == 'neg'): 
                 data['neg_tweet'] += row.value
-            elif(row.key[1] == 0):  
+            elif(row.key[1] == 'neutral'):  
                 data['neutral_tweet'] += row.value
         
     response = {
@@ -269,7 +269,7 @@ def positive_per_city():
     data = {'positive': 0, 'others': 0}
     city = request.args.get('city')
     for row in list(vaccine.view('mapviews/positive_score', group=True)):
-        if((city == 'RuralArea' and is_rural(row.key)) 
+        if((city == 'Rural Area' and is_rural(row.key)) 
             or city == row.key 
             or city == 'Overall Tweet'):
             data['positive'] += row.value
