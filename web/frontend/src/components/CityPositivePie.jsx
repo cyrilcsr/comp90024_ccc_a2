@@ -79,7 +79,7 @@ export default class PositivePieLeft extends Component {
         return (
             <div className='pos-pie-chart'>
                 <SelectionBar handleChange={this.handleChange} name={this.state.city} type='vaccine'/>
-                <Chart type="pie" width={350} series={this.state.series} options={this.state.options} className='positive-chart'/>
+                <Chart type="pie" width={250} series={this.state.series} options={this.state.options} className='positive-chart'/>
           </div>
         )
     }

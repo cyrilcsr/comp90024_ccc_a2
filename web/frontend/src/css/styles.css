@@ -65,7 +65,7 @@ h2 {
 }
 
 .pos-map {
-  width: 70vw;
+  width: 100vw;
   height: 80vh;
   margin: auto;
   z-index: 1;
@@ -109,7 +109,7 @@ display: grid;
 grid-template-columns: repeat(5, 1fr);
 grid-template-rows: 1.1fr repeat(3, 1.2fr);
 grid-column-gap: 0px;
-grid-row-gap: 0px;
+grid-row-gap: 2px;
 }
 
 .div1 { grid-area: 1 / 2 / 2 / 5; }

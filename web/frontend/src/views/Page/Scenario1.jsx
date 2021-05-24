@@ -17,7 +17,9 @@ export default class Scenario1 extends Component {
     render() {
         return (
             <div className='scenario'>
-                 <Nav />
+                 <Nav />            
+                <h3 className='scenario-title'>Timeline of Tweets Regarding Vaccine</h3> 
+
                  <div className='scenario1-body'>
                      <VaccineLine/>
                      <div onClick={() => this.setState({ line: !this.state.line })}>

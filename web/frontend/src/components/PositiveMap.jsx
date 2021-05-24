@@ -67,7 +67,7 @@ const PositveMap = ({ onClick }) => {
               '#223b53',
               /* other */ '#ccc'
             ],
-            "circle-radius":['+', -10, ['number', ['get', 'pos_tweet'], -10]],
+            "circle-radius":['+', -25, ['number', ['get', 'pos_tweet'], -5]],
             'circle-opacity': 0.5,
           },
 

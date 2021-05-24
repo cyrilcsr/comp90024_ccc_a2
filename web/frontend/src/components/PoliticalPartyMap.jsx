@@ -20,7 +20,7 @@ const PoliticalPartyMap = () => {
         container: mapContainer.current,
         style: "mapbox://styles/jeansxt/cko9nl9d81nsw17mpgbwn11ph", // stylesheet location
         center: [150, -28],
-        zoom: 2.8
+        zoom: 2.9
       })
 
       map.on("load",function () {
