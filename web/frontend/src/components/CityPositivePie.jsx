@@ -26,7 +26,6 @@ export default class PositivePieLeft extends Component {
               },
               labels: ['Support', 'Neutral or Not Support'],
               chart: {
-                width: 35,
                 type: 'pie'
               },
               colors:['#fbb03b', '#3e3c3c'],
@@ -80,7 +79,7 @@ export default class PositivePieLeft extends Component {
         return (
             <div className='pos-pie-chart'>
                 <SelectionBar handleChange={this.handleChange} name={this.state.city} type='vaccine'/>
-                <Chart type="pie" series={this.state.series} options={this.state.options} className='positive-chart'/>
+                <Chart type="pie" width={350} series={this.state.series} options={this.state.options} className='positive-chart'/>
           </div>
         )
     }
