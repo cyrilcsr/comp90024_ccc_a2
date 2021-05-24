@@ -111,11 +111,11 @@ def set_up(server):
 server1_url = 'http://admin:couchdb@' + ip1 + ':5984'
 server2_url = 'http://admin:couchdb@' + ip2 + ':5984'
 server3_url = 'http://admin:couchdb@' + ip3 + ':5984'
-temp_url = 'http://admin:couchdb@172.26.128.224:5984'
+# temp_url = 'http://admin:couchdb@172.26.128.224:5984'
 
 server1 = Server(server1_url)
 server2 = Server(server2_url)
-server3 = Server(server2_url)
+server3 = Server(server3_url)
 
 try:
     globaldb, branddb, vaccine, parties = set_up(server1)
