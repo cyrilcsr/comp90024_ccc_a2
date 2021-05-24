@@ -19,7 +19,7 @@ export default function SelectionBar({ handleChange,  name, type }) {
     }
     else if(type === 'vaccine'){
         axios.get('http://127.0.0.1:5000/city_data').then(res => {
-            setElements([...res.data.city])
+            setElements([...res.data.city, 'Global'])
     })
     }
     else if(type === 'parties'){
