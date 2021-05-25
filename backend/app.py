@@ -20,6 +20,21 @@ beip, _ = config.items('backend')[0]
 db_list = [ip1,ip2,ip3]
 db_list.remove(beip)
 
+os.system("curl http://admin:couchdb@"+beip+":5984/_membership -o result.txt")
+file = open("result.txt",'r')
+line = json.loads(file.readline())
+file.close()
+current_node = line["all_nodes"][0]
+removed_nodes = line["cluster_nodes"]
+removed_nodes.remove(current_node)
+for node in removed_nodes:
+      os.system("curl http://admin:couchdb@"+beip+":5984/_node/_local/_nodes/"+node+" -o result.txt")
+      file = open("result.txt",'r')
+      line = json.loads(file.readline())
+      file.close()
+      rev = line["_rev"]
+      os.system("curl -X DELETE http://admin:couchdb@"+beip+":5984/_node/_local/_nodes/"+node+"?rev="+rev)
+
 os.system("curl -X POST -H "+'"Content-Type: application/json"'+
       " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+
       '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"couchdb", "node_count":"3"}'+"'")
