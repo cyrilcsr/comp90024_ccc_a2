@@ -109,7 +109,7 @@ test-server:172.26.131.7
 test2:172.26.130.118
 database:172.26.133.237
 
-curl http://admin:couchdb@172.26.131.101:5984/_membership
+curl http://admin:couchdb@172.26.128.165:5984/_membership
 
 curl -X PUT http://admin:couchdb@$172.26.131.7:5984/_nodes/172.26.131.85@172.26.131.85 -d {}
 curl -X PUT http://admin:couchdb@172.26.129.88:5984/_node/_local/_nodes/couchdb@172.26.130.118 -d {}
@@ -208,8 +208,8 @@ CMD npm start
 
 
 ##docker bash
-docker build -f Dockerfile -t ccc_frontend:1.2 . --no-cache
-docker image tag ccc_frontend:1.2 cyrilcsr/ccc_frontend:1.2
+docker build -f Dockerfile -t ccc_frontend:1.3 . --no-cache
+docker image tag ccc_frontend:1.3 cyrilcsr/ccc_frontend:1.3
 docker run -d -p 3000:3000 --name frontend ccc_frontend:1.0
 docker images
 docker ps

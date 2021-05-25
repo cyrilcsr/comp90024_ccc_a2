@@ -70,6 +70,24 @@
   roles:
     - role: deploy-frontend
 
+- hosts: database1
+  remote_user: '{{ remote_username }}'
+  vars_files:
+    - host_vars/mrc.yaml
+  gather_facts: true
+
+  roles:
+    - role: delpoy-vaccine-harvester
+
+- hosts: database2
+  remote_user: '{{ remote_username }}'
+  vars_files:
+    - host_vars/mrc.yaml
+  gather_facts: true
+
+  roles:
+    - role: deploy-brand-harvester
+
 # - hosts: webserver
 #   remote_user: '{{ remote_username }}'
 #   vars_files:

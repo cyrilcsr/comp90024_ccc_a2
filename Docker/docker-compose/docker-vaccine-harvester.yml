@@ -1,0 +1,7 @@
+version: '3.7'
+
+services:
+  vaccine_harvester:
+     image: cyrilcsr/ccc_harvester_vaccine:1.0
+     container_name: vaccine_harvester
+     restart: always

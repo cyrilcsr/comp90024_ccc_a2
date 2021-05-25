@@ -1,0 +1,11 @@
+---
+- name: Deploy Twitter harvester for brand keyword
+  community.docker.docker_compose:
+    project_name: brand_harvester
+    definition:
+      version: '3.7'
+      services:
+        brand_harvester:
+          image: cyrilcsr/ccc_harvester_brand:1.0
+          container_name: brand_harvester
+          restart: always

@@ -6,7 +6,7 @@
       version: '3.7'
       services:
         backend:
-          image: cyrilcsr/ccc_backend:1.4
+          image: cyrilcsr/ccc_backend:1.5
           container_name: backend
           volumes:
             - /home/ubuntu/config:/home/config

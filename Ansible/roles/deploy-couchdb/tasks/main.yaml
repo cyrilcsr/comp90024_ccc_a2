@@ -23,4 +23,4 @@
                 - COUCHDB_PASSWORD=couchdb
                 - COUCHDB_SECRET=mysecret
                 - NODENAME={{ansible_default_ipv4.address}}
-            image: couchdb:latest
+            image: couchdb:3.1.1

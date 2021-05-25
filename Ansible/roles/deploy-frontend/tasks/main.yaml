@@ -14,7 +14,7 @@
             - "5000:5000"
           restart: always
         frontend-app:
-          image: cyrilcsr/ccc_frontend:1.2
+          image: cyrilcsr/ccc_frontend:1.3
           container_name: frontend
           volumes:
             - /home/ubuntu/config:/home/config
