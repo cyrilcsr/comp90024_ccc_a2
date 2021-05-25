@@ -1,0 +1,9 @@
+- name: Deploy backend application by docker swarm
+  ansible.builtin.shell: >
+    docker service create 
+    --name backend
+    --mount type=bind,source=/home/ubuntu/config,destination=/home/config
+    --publish 5000:5000
+    --constraint node.hostname==backend
+    cyrilcsr/ccc_backend:1.5
+

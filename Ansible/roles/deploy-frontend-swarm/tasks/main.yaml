@@ -1,0 +1,64 @@
+---
+# - name: Deploy frontend node to read IP config
+#   community.docker.docker_swarm_service:
+#       name: frontend_node
+#       image: cyrilcsr/ccc_frontend_node:1.0
+#       mounts:
+#         - source: config
+#           target: /home/config
+#           type: bind
+#       publish:
+#         - published_port: 5000
+#           target_port: 5000
+#           mode: host
+#       constraints:
+#         - node.hostname==webserver
+#       restart_config:
+#         condition: on-failure
+#         delay: 5s
+#         max_attempts: 3
+#         window: 120s
+
+# - name: Deploy frontend web app
+#   community.docker.docker_swarm_service:     
+#       name: frontend_app
+#       image: cyrilcsr/ccc_frontend:1.2
+#       mounts:
+#         - source: /home/ubuntu/config
+#           target: /home/config
+#           type: bind
+#       publish:
+#         - published_port: 3000
+#           target_port: 3000
+#           mode: host
+#       constraints:
+#         - node.hostname==webserver
+#       restart_config:
+#         condition: on-failure
+#         delay: 5s
+#         max_attempts: 3
+#         window: 120s
+
+# - name: Copy instance IP file to all instance
+#   become: yes
+#   ansible.builtin.copy:
+#     src: ../Docker/docker-compose/docker-frontend-app.yml
+#     dest: /home/ubuntu/docker-frontend-app.yml
+
+- name: Deploy web node by docker swarm
+  ansible.builtin.shell: >
+    docker service create 
+    --name frontend-node
+    --mount type=bind,source=/home/ubuntu/config,destination=/home/config
+    --publish 5000:5000
+    --constraint node.hostname==webserver
+    cyrilcsr/ccc_frontend_node:1.0
+
+- name: Deploy web application by docker swarm
+  ansible.builtin.shell: >
+    docker service create
+    --name frontend-app
+    --mount type=bind,source=/home/ubuntu/config,destination=/home/config
+    --publish 3000:3000
+    --constraint node.hostname==webserver
+    cyrilcsr/ccc_frontend:1.3

@@ -12,8 +12,6 @@
     - role: openstack-security-group
     - role: openstack-instance
     # - role: openstack-volume-snapshot
-    # - role: openstack-setup
-    # - role: add-instance-key
 
 - hosts: instances
   remote_user: '{{ remote_username }}'
@@ -43,6 +41,27 @@
   roles:
     - role: init-docker-swarm-worker
 
+# Deploy Docker service using docker swarm
+# - hosts: backend
+#   remote_user: '{{ remote_username }}'
+#   vars_files:
+#     - host_vars/mrc.yaml
+#   gather_facts: true
+
+#   roles:
+#     - role: deploy-couchdb2-swarm
+#     - role: deploy-couchdb3-swarm
+#     - role: deploy-couchdb1-swarm
+#     - role: deploy-backend-swarm
+#     - role: deploy-frontend-swarm
+#     - role: delpoy-vaccine-harvester-swarm
+#     - role: deploy-brand-harvester-swarm
+
+    
+
+
+
+# Deploy Docker service using docker compose
 - hosts: database
   remote_user: '{{ remote_username }}'
   vars_files:
@@ -87,12 +106,3 @@
 
   roles:
     - role: deploy-brand-harvester
-
-# - hosts: webserver
-#   remote_user: '{{ remote_username }}'
-#   vars_files:
-#     - host_vars/mrc.yaml
-#   gather_facts: true
-
-#   roles:
-#     - role: deploy-docker-swarm

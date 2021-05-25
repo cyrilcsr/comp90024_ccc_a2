@@ -2,10 +2,12 @@ version: '3.7'
 
 services:
   frontend-app:
-     image: cyrilcsr/ccc_frontend:1.1
-     container_name: frontend
-     volumes:
-       - /home/ubuntu/config:/home/config
-     ports:
-       - "3000:3000"
-     restart: always
+    image: cyrilcsr/ccc_frontend:1.1
+    container_name: frontend
+    volumes:
+      - /home/ubuntu/config:/home/config
+    ports:
+      - "3000:3000"
+    environment:
+      - constraint:node.hostname==webserver
+    restart: always

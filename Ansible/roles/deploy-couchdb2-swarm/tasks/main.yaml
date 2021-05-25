@@ -1,0 +1,15 @@
+- name: Deploy first couchdb node by docker swarm
+  ansible.builtin.shell: >
+    docker service create 
+    --name couchdb
+    --mount type=bind,source=/home/ubuntu/data,destination=/opt/couchdb/data
+    --publish 5984:5984
+    --publish 5986:5986
+    --publish 4369:4369
+    --publish 9100-9200:9100-9200
+    --env COUCHDB_USER=admin
+    --env COUCHDB_PASSWORD=couchdb
+    --env COUCHDB_SECRET=mysecret
+    --env NODENAME={{groups['database1'][0]}}
+    --constraint node.hostname==database1
+    couchdb:3.1.1

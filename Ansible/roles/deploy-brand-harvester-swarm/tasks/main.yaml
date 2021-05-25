@@ -1,0 +1,6 @@
+- name: Deploy Twitter harvester for vaccine keyword
+  ansible.builtin.shell: >
+    docker service create 
+    --name vaccine_harvester
+    --constraint node.hostname==database2
+    cyrilcsr/ccc_harvester_brand:1.0

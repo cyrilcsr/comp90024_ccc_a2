@@ -266,3 +266,11 @@ docker image push cyrilcsr/ccc_harvester_vaccine:1.0
 docker build -f Dockerfile -t ccc_harvester_brand:1.0 . --no-cache
 docker image tag ccc_harvester_brand:1.0 cyrilcsr/ccc_harvester_brand:1.0
 docker image push cyrilcsr/ccc_harvester_brand:1.0
+
+
+docker service create \
+  --name frontend-node\
+  --mount type=bind,source=/home/ubuntu/config,destination=/home/config\
+  --publish 5000:5000\
+  --constraint node.hostname==webserver\
+  cyrilcsr/ccc_frontend_node:1.0
