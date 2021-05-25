@@ -55,6 +55,23 @@ os.system("curl -X POST -H "+'"Content-Type: application/json"'+
 os.system("curl -X POST -H "+'"Content-Type: application/json"'+
             " http://admin:couchdb@"+beip+":5984/_cluster_setup -d '"+'{"action": "finish_cluster"}'+"'")
 
+os.system("curl http://admin:couchdb@"+beip+":5984/_all_dbs -o result.txt")
+file = open("result.txt",'r')
+db_names = json.loads(file.readline())
+file.close()
+
+for db in db_names:
+    os.system("curl http://admin:couchdb@"+beip+":5984/_node/_local/_dbs/"+db+" -o result.txt")
+    file = open("result.txt", 'r')
+    line = file.readline()
+    shard = json.loads(line)
+    file.close()
+    node_list = list(shard["by_node"].keys())
+    line = line.replace(node_list[0],"couchdb@"+beip)
+    line = line.replace(node_list[1],"couchdb@"+db_list[0])
+    line = line.replace(node_list[2],"couchdb@"+db_list[1])
+    os.system("curl -X PUT http://admin:couchdb@"+beip+":5984/_node/_local/_dbs/"+db+" -d '"+line+"'")
+
 def set_up(server):
     # create/connect to parties doc
     if not 'parties_data' in server:
