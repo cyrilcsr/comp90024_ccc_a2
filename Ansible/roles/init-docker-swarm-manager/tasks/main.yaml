@@ -1,0 +1,14 @@
+---
+- name: Init a new swarm with default parameters
+  community.docker.docker_swarm:
+    state: present
+  register: docker_swarm_return
+
+- name: Print returned worker token for host "{{ansible_hostname}}"
+  debug:
+    msg: "{{docker_swarm_return.swarm_facts.JoinTokens.Worker}}"
+
+#Save docker swarm initialisation data structure to local file
+- local_action: copy content={{docker_swarm_return}} dest={{docker_swarm_ini_file}}
+
+

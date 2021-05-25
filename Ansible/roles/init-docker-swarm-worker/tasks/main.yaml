@@ -1,0 +1,24 @@
+---
+- name: Include vars of docker-swarm-config
+  include_vars:
+    file: "{{docker_swarm_ini_file}}"
+    name: docker_swarm_config
+
+# - name: print docker swarm variable include from file
+#   debug:
+#     msg: "{{docker_swarm_config}}"
+
+# - name: Test group list
+#   debug:
+#     msg: "{{groups['backend']}}"
+
+- name: Add nodes
+  community.docker.docker_swarm:
+    state: join
+    advertise_addr: "{{ansible_default_ipv4.address}}"
+    join_token: "{{docker_swarm_config.swarm_facts.JoinTokens.Worker}}"
+    remote_addrs: [ "{{groups['backend'][0]}}:2377" ]
+
+# - name: Test group list
+#   debug:
+#     msg: "{{groups['backend']}}"

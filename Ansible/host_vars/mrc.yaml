@@ -66,6 +66,24 @@ security_groups:
     port_range_min: 3000
     port_range_max: 3000
     remote_ip_prefix: 0.0.0.0/0
+  - name: docker-swarm-mamagement
+    description: "Open 2377 for frontend"
+    protocol: tcp
+    port_range_min: 2377
+    port_range_max: 2377
+    remote_ip_prefix: 0.0.0.0/0
+  - name: docker-swarm-cluster
+    description: "Open 7946 for frontend"
+    protocol: tcp
+    port_range_min: 7946
+    port_range_max: 7946
+    remote_ip_prefix: 0.0.0.0/0
+  - name: docker-swarm-overlay
+    description: "Open 4789 for frontend"
+    protocol: tcp
+    port_range_min: 4789
+    port_range_max: 4789
+    remote_ip_prefix: 0.0.0.0/0
 # Instance
 instances:
   - name: database1
@@ -90,6 +108,9 @@ instance_key_name: general
 
 # File Path
 instance_ip_file: config/instance_ips.ini
+worker_token_file: config/worker_token.yml
+manager_token_file: config/manager_token.yml
+docker_swarm_ini_file: config/docker_swarm_ini.yml
 
 # Instance login user
 remote_username: ubuntu

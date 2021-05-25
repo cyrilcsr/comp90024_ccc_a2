@@ -1,7 +1,7 @@
 ---
 - name: Deploy couchdb on {{ansible_default_ipv4.address}}
   community.docker.docker_compose:
-    project_name: frontend
+    project_name: couchdb
     definition:
       version: '3.7'
       services:
@@ -22,5 +22,5 @@
                 - COUCHDB_USER=admin
                 - COUCHDB_PASSWORD=couchdb
                 - COUCHDB_SECRET=mysecret
-                - NODENAME={{ansible_hostname}}
+                - NODENAME={{ansible_default_ipv4.address}}
             image: couchdb:latest

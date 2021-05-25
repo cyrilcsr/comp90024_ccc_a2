@@ -1,0 +1,37 @@
+---
+- name: Deploy frontend node to read IP config
+  community.docker.docker_swarm_service:
+      name: frontend_node
+      image: cyrilcsr/ccc_frontend_node:1.0
+      mounts:
+        - source: /home/ubuntu/config
+          target: /home/config
+          type: bind
+      publish:
+        - published_port: 5000
+          target_port: 5000
+          mode: host
+      restart_config:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+- name: Deploy frontend web app
+  community.docker.docker_swarm_service:     
+      name: frontend
+      image: cyrilcsr/ccc_frontend:1.2
+      mounts:
+        - source: /home/ubuntu/config
+          target: /home/config
+          type: bind
+      publish:
+        - published_port: 5000
+          target_port: 5000
+          mode: host
+      restart_config:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+

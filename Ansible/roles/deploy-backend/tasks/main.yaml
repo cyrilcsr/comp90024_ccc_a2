@@ -1,5 +1,5 @@
 ---
-- name: Deploy frontend services
+- name: Deploy backend services
   community.docker.docker_compose:
     project_name: backend
     definition:

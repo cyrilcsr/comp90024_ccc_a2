@@ -16,10 +16,10 @@
   loop: '{{ instances }}'
   register: os_instance
 
-- debug:
-    msg: "Instance {{ item.openstack.name }} has been created. IP address is {{ item.openstack.public_v4 }}"
-  loop: '{{ os_instance.results }}'
-  when: item.openstack is defined
+# - debug:
+#     msg: "Instance {{ item.openstack.name }} has been created. IP address is {{ item.openstack.public_v4 }}"
+#   loop: '{{ os_instance.results }}'
+#   when: item.openstack is defined
 
 - name: Wait for connection
   wait_for:
@@ -71,6 +71,13 @@
     groups: database2
   loop: '{{ os_instance.results }}'
   when: item.openstack.name is match("database2")
+
+- name: Add host - Docker Swarn Worker
+  add_host:
+    name: '{{ item.openstack.public_v4 }}'
+    groups: worker
+  loop: '{{ os_instance.results }}'
+  when: item.openstack.name is match("database.*") or item.openstack.name is match("webserver")
 
 - name: create file
   template:

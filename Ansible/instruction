@@ -109,7 +109,7 @@ test-server:172.26.131.7
 test2:172.26.130.118
 database:172.26.133.237
 
-curl http://admin:couchdb@172.26.133.8:5984/_membership
+curl http://admin:couchdb@172.26.131.101:5984/_membership
 
 curl -X PUT http://admin:couchdb@$172.26.131.7:5984/_nodes/172.26.131.85@172.26.131.85 -d {}
 curl -X PUT http://admin:couchdb@172.26.129.88:5984/_node/_local/_nodes/couchdb@172.26.130.118 -d {}
@@ -171,7 +171,9 @@ CMD ["python", "./backend/app.py"]
 
 ##docker bash
 move config folder under ccc-backend
-docker build -f Dockerfile -t ccc_backend:1.4 . --no-cache
+docker build -f Dockerfile -t ccc_backend:1.5 . --no-cache
+docker image tag ccc_backend:1.4 cyrilcsr/ccc_backend:1.5
+docker image push cyrilcsr/ccc_backend:1.5
 docker run -d -p 5000:5000 -v /home/ubuntu/config:/home/config --name backend ccc_backend:1.2
 docker image tag ccc_backend:1.4 cyrilcsr/ccc_backend:1.4
 
@@ -249,3 +251,18 @@ docker-compose -f couchdb.yml up -d
 docker-compose -f docker-frontend-node.yml up -d
 docker-compose -f docker-frontend-app.yml up -d
 
+docker swarm join \
+--advertise-addr 172.26.134.53 \
+--listen-addr 172.26.134.53:2377 \
+--token SWMTKN-1-3jglfpa6e4zy2ntfomtwavi7g53ah9yjgek7mug4eju3s7vjbr-40w3zi264vzk18owquxmzaxmj \
+172.26.128.210
+
+
+###Harvester
+docker build -f Dockerfile -t ccc_harvester_vaccine:1.0 . --no-cache
+docker image tag ccc_harvester_vaccine:1.0 cyrilcsr/ccc_harvester_vaccine:1.0
+docker image push cyrilcsr/ccc_harvester_vaccine:1.0
+
+docker build -f Dockerfile -t ccc_harvester_brand:1.0 . --no-cache
+docker image tag ccc_harvester_brand:1.0 cyrilcsr/ccc_harvester_brand:1.0
+docker image push cyrilcsr/ccc_harvester_brand:1.0
