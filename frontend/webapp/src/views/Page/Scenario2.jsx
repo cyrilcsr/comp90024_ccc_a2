@@ -21,9 +21,10 @@ export default class Scenario3 extends Component {
             <div className='scenario'>
                 <Nav />
                 <div className="parent">
-                    <div className="div1"> <h3 className='scenario-title'>Political Party Support Rate & Vaccination Support Rate</h3> </div>
+                    <div className="div1"> <h3 className='scenario-title'>How Does Political Party Support Ratio Relate To Vaccine Support Ratio?</h3> </div>
                     <div className="div2"> <PoliticalPartyMap className='election-map'/></div>
                     <div className="div3">  
+                        <h3>Vaccine Support Ratio</h3>
                         <CityPositivePie className='positive-pie'/> 
                         <CorrelationBar className='coorelation'/>
                     </div>

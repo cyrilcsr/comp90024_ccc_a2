@@ -23,7 +23,7 @@ export default class CorrelationBar extends Component {
                     foreColor: 'white'
                 },
                 title: {
-                    text:'Correlation Between Party and Vaccine Support Rate'
+                    text:'Correlation Between Party and Vaccine Support'
                 },
                 xaxis: {
                     type: 'category',
