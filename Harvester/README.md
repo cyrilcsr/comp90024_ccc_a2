@@ -1,6 +1,6 @@
 StreamCrawler_b.py is getting brand data from stream API in database1
 
-StreamCrawler_v.py is getting brand data from stream API in database1
+StreamCrawler_v.py is getting vaccine data in Australia from stream API in database1
 
 crawler_brand.py,crawler_vaccine.py,crawler_global.py is used to collect previous data from tweepy.search
 
