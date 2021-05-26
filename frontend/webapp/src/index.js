@@ -1,3 +1,14 @@
+/*
+COMP90024 2021 S1 Assignment 2
+Team: 41
+City: Melbourne
+Group Member:
+Huimin Huang 1142020
+Han Sun 1111271
+Jean Ma 1028582
+Shirui Cheng 1189721
+Xiaoyue Lyu 1237539
+*/
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
