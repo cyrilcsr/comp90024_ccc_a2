@@ -1,3 +1,15 @@
+/*
+COMP90024 2021 S1 Assignment 2
+Team: 41
+City: Melbourne
+Group Member:
+Huimin Huang 1142020
+Han Sun 1111271
+Jean Ma 1028582
+Shirui Cheng 1189721
+Xiaoyue Lyu 1237539
+*/
+
 import './App.css';
 
 import OpenPage from './views/Page/OpenPage'
