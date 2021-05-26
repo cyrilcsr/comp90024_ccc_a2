@@ -1,20 +1,29 @@
 # comp90024_ccc_a2
 
 Project: COMP90024--2021S1--Assignment2
+
 Title: Do Australians support COVID-19 vaccines?
+
 Team: Group41
+
 Member:
+
 Huimin Huang 1142020
+
 Han Sun 1111271
+
 Jean Ma 1028582
+
 Shirui Cheng 1189721
+
 Xiaoyue Lyu 1237539
 
-##Installation
+## Installation
 ```javascript
 sudo pip install ansible
+```
 
-##Steps of Deployment
+## Steps of Deployment
 Download OpenStack RC file from MRC project page under USER tab
 https://dashboard.cloud.unimelb.edu.au/project/
 Set project password on the Settings page https://dashboard.cloud.unimelb.edu.au/settings/reset-password/
